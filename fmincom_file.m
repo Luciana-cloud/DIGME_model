@@ -37,7 +37,7 @@ Aeq = [];
 beq = [];
 
 ub = [1e2 0.5 1e1 10];
-lb = [1e-2 1e-2 1e-3 0.5];
+lb = [1e-2 0.1 1e-3 0.5];
 
 p0 = p;
 
@@ -48,3 +48,8 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 
 %%
 save('Ayora_ambient_NICHE.mat','p')
+save('Ayora_drought_NICHE.mat','p')
+save('brhill_ambient_NICHE.mat','p')
+save('brhill_drought_NICHE.mat','p')
+save('brookdale_ambient_NICHE.mat','p')
+save('brookdale_drought_NICHE.mat','p')

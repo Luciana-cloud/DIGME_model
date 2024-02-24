@@ -1,8 +1,8 @@
-%% Plotting DAMM %%
+%% Plotting models %%
 
 Data    = load("DIGME_mean.2.txt");
 
-%%
+%% DAMM model results
 
 load('Ayora_ambient.mat');
 x1     = linspace(0.04,0.43,42);
@@ -70,8 +70,6 @@ x_6     = Data(31:36,2)*100;
 SR_6o   = Data(31:36,8);
 SR_6sd  = Data(31:36,9)/sqrt(length(x_6));
 
-%%
-
 fig = figure;
 subplot(2,3,1);
 plot(x1*100,SR_a_a)
@@ -127,4 +125,79 @@ title('Brookdale Drought')
 xlabel('Soil moisture (%)')
 ylabel('Respiration (CO2 ug/g/h)')
 
-%%
+%% Niche model results
+
+x1       = linspace(0.01,1.0,100);
+
+load('Ayora_ambient_NICHE.mat')
+Res_a_a  = NICHE_model(x1,p);
+
+load('Ayora_drought_NICHE.mat')
+Res_a_d  = NICHE_model(x1,p);
+
+load('brhill_ambient_NICHE.mat')
+Res_b_a  = NICHE_model(x1,p);
+
+load('brhill_drought_NICHE.mat')
+Res_b_d  = NICHE_model(x1,p);
+
+load('brookdale_ambient_NICHE.mat')
+Res_br_a = NICHE_model(x1,p);
+
+load('brookdale_drought_NICHE.mat')
+Res_br_d = NICHE_model(x1,p);
+
+fig = figure;
+subplot(2,3,1);
+plot(x1*100,Res_a_a)
+hold on
+errorbar(x_1,SR_1o,SR_1sd,"*")
+ylim([0 7])
+title('Ayora Ambient')
+xlabel('Soil moisture (%)')
+ylabel('Respiration (CO2 ug/g/h)')
+
+subplot(2,3,2);
+plot(x1*100,Res_a_d)
+hold on
+errorbar(x_2,SR_2o,SR_2sd,"*")
+ylim([0 7])
+title('Ayora Drought')
+xlabel('Soil moisture (%)')
+ylabel('Respiration (CO2 ug/g/h)')
+
+subplot(2,3,3);
+plot(x1*100,Res_b_a)
+hold on
+errorbar(x_3,SR_3o,SR_3sd,"*")
+ylim([0 3])
+title('Brhill Ambient')
+xlabel('Soil moisture (%)')
+ylabel('Respiration (CO2 ug/g/h)')
+
+subplot(2,3,4);
+plot(x1*100,Res_b_d)
+hold on
+errorbar(x_4,SR_4o,SR_4sd,"*")
+ylim([0 3])
+title('Brhill Drought')
+xlabel('Soil moisture (%)')
+ylabel('Respiration (CO2 ug/g/h)')
+
+subplot(2,3,5);
+plot(x1*100,Res_br_a)
+hold on
+errorbar(x_5,SR_5o,SR_5sd,"*")
+ylim([0 90])
+title('Brookdale Ambient')
+xlabel('Soil moisture (%)')
+ylabel('Respiration (CO2 ug/g/h)')
+
+subplot(2,3,6);
+plot(x1*100,Res_br_d)
+hold on
+errorbar(x_6,SR_6o,SR_6sd,"*")
+ylim([0 90])
+title('Brookdale Drought')
+xlabel('Soil moisture (%)')
+ylabel('Respiration (CO2 ug/g/h)')
