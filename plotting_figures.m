@@ -12,14 +12,14 @@ SR_1o  = Data(1:6,8);
 SR_1sd = Data(1:6,9)/sqrt(length(x_1));
 
 load('Ayora_drought.mat');
-x2     = linspace(0.04,0.425,42);
+x2     = linspace(0.04,0.427,42.5);
 SR_a_d = plotting_DAMM(x2,p);
 x_2    = Data(7:12,2)*100;
 SR_2o  = Data(7:12,8);
 SR_2sd = Data(7:12,9)/sqrt(length(x_2));
 
 load('brhill_ambient.mat');
-x3     = linspace(0.04,0.425,42);
+x3     = linspace(0.04,0.426,45);
 SR_b_a = plotting_DAMM(x3,p);
 x_3    = Data(13:18,2)*100;
 SR_3o  = Data(13:18,8);

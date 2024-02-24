@@ -9,7 +9,7 @@ Data        = load("DIGME_mean.2.txt");
 % x_1         = Data(13:18,2);  % brhill Ambient
 % x_1         = Data(19:24,2);  % brhill Drought
 % x_1         = Data(25:30,2);  % brookdale Ambient
-% x_1         = Data(31:36,2);  % brookdale Drought
+x_1         = Data(31:36,2);  % brookdale Drought
 
 % Model Parameters
 % p(1); % V_max - Maximum velocity of the enzymatic reaction*
@@ -19,14 +19,22 @@ Data        = load("DIGME_mean.2.txt");
 % p(5); % K_O (drought) Michaelis constant (O)
 
 % Model  fixed parameters and model results
-q(1)        = mean(Data(1:12,4));      % Bulk density [kg/m3]
-q(2)        = 30.99430/100;                 % Clay content [%]
+% q(1)        = mean(Data(1:12,4));           % Bulk density [kg/m3] Ayora
+% q(1)        = mean(Data(13:24,4));          % Bulk density [kg/m3] brhill
+% q(1)        = mean(Data(25:36,4));          % Bulk density [kg/m3] brookdale
+% q(2)        = 30.99430/100;                 % Clay content [%] Ayora
+% q(2)        = 10.26311/100;                 % Clay content [%] brhill
+% q(2)        = 39.77977/100;                 % Clay content [%] brookdale
 q(3)        = 1.5;                          % Cementation exponent
 q(4)        = 2.5;                          % Saturation exponent
 q(5)        = 0.2;                          % Empirical coefficient of water percolation threshold[-]
 q(6)        = 0.1;                          % Empirical coefficient of air percolation threshold[-]
-q(7)        = mean(Data(1:12,12))/1.72/100; % Concentration of SOC [%]
-q(8)        = 1.9;                     % Particle density [kg/m3]
+% q(7)        = mean(Data(1:12,12))/1.72/100;  % Concentration of SOC [%] Ayora
+% q(7)        = mean(Data(13:24,12))/1.72/100; % Concentration of SOC [%] brhill
+% q(7)        = mean(Data(25:36,12))/1.72/100; % Concentration of SOC [%] brookdale
+% q(8)        = 2.0375;                       % Particle density [kg/m3] Ayora
+% q(8)        = 2.729225;                     % Particle density [kg/m3] brhill
+% q(8)        = 1.939333;                     % Particle density [kg/m3] brookdale
 
 SR_sim      = DAMM_model(x_1,p,q); 
 % Ayora Ambient
@@ -45,8 +53,8 @@ SR_sim      = DAMM_model(x_1,p,q);
 % SR_obs      = Data(25:30,8);
 % SR_sd       = Data(25:30,9);
 % brookdale Drought
-% SR_obs      = Data(31:36,8);
-% SR_sd       = Data(31:36,9);
+SR_obs      = Data(31:36,8);
+SR_sd       = Data(31:36,9);
 
 SSE_1       = (sum(((SR_obs-SR_sim)./SR_sd).^2))./length(SR_sim);
 SSE         = SSE_1^0.5

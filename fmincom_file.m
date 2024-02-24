@@ -7,8 +7,8 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [1e2 5e1 5e2];
-lb = [1e-2 5e-5 5e-6];
+ub = [1e2 1e1 1e2];
+lb = [1e-2 1e-5 1e-6];
 
 p0 = p;
 
@@ -25,3 +25,26 @@ save('brhill_ambient.mat','p')
 save('brhill_drought.mat','p')
 save('brookdale_ambient.mat','p')
 save('brookdale_drought.mat','p')
+
+%%
+p = [0.5 0.5 0.01 1];
+%%
+ObjectiveFunction = @calibration_NICHE;
+
+A = [];
+b = [];
+Aeq = [];
+beq = [];
+
+ub = [1e2 0.5 1e1 10];
+lb = [1e-2 1e-2 1e-3 0.5];
+
+p0 = p;
+
+nonlcon = [];
+options = optimoptions(@fmincon,'MaxFunEvals',100000);
+
+[p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%%
+save('Ayora_ambient_NICHE.mat','p')
