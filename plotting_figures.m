@@ -5,43 +5,67 @@ Data    = load("DIGME_mean.2.txt");
 %%
 
 load('Ayora_ambient.mat');
-x1     = linspace(0.04,0.425,42);
-SR_a_a = plotting_DAMM(x1,p);
+x1     = linspace(0.04,0.43,42);
+q(1)   = mean(Data(1:12,4));           % Bulk density [kg/m3] Ayora
+q(2)   = 30.99430/100;                 % Clay content [%] Ayora
+q(7)   = mean(Data(1:12,12))/1.72/100;  % Concentration of SOC [%] Ayora
+q(8)   = 1.939333;                     % Particle density [kg/m3] brookdale
+SR_a_a = plotting_DAMM(x1,p,q);
 x_1    = Data(1:6,2)*100;
 SR_1o  = Data(1:6,8);
 SR_1sd = Data(1:6,9)/sqrt(length(x_1));
 
 load('Ayora_drought.mat');
-x2     = linspace(0.04,0.427,42.5);
-SR_a_d = plotting_DAMM(x2,p);
+x2     = linspace(0.04,0.437,42.5);
+q(1)   = mean(Data(1:12,4));           % Bulk density [kg/m3] Ayora
+q(2)   = 30.99430/100;                 % Clay content [%] Ayora
+q(7)   = mean(Data(1:12,12))/1.72/100;  % Concentration of SOC [%] Ayora
+q(8)   = 1.939333;                     % Particle density [kg/m3] brookdale
+SR_a_d = plotting_DAMM(x2,p,q);
 x_2    = Data(7:12,2)*100;
 SR_2o  = Data(7:12,8);
 SR_2sd = Data(7:12,9)/sqrt(length(x_2));
 
 load('brhill_ambient.mat');
-x3     = linspace(0.04,0.426,45);
-SR_b_a = plotting_DAMM(x3,p);
+x3     = linspace(0.018,0.35,45);
+q(1)   = mean(Data(13:24,4));          % Bulk density [kg/m3] brhill
+q(2)   = 10.26311/100;                 % Clay content [%] brhill
+q(7)   = mean(Data(13:24,12))/1.72/100; % Concentration of SOC [%] brhill
+q(8)   = 2.729225;                     % Particle density [kg/m3] brhill
+SR_b_a = plotting_DAMM(x3,p,q);
 x_3    = Data(13:18,2)*100;
 SR_3o  = Data(13:18,8);
 SR_3sd = Data(13:18,9)/sqrt(length(x_3));
 
 load('brhill_drought.mat');
-x4     = linspace(0.04,0.425,42);
-SR_b_d = plotting_DAMM(x4,p);
+x4     = linspace(0.0175,0.35,42);
+q(1)   = mean(Data(13:24,4));          % Bulk density [kg/m3] brhill
+q(2)   = 10.26311/100;                 % Clay content [%] brhill
+q(7)   = mean(Data(13:24,12))/1.72/100; % Concentration of SOC [%] brhill
+q(8)   = 2.729225;                     % Particle density [kg/m3] brhill
+SR_b_d = plotting_DAMM(x4,p,q);
 x_4    = Data(19:24,2)*100;
 SR_4o  = Data(19:24,8);
 SR_4sd = Data(19:24,9)/sqrt(length(x_4));
 
 load('brookdale_ambient.mat');
-x5      = linspace(0.04,0.427,43);
-SR_br_a = plotting_DAMM(x5,p);
+x5      = linspace(0.025,0.685,80);
+q(1)    = mean(Data(25:36,4));          % Bulk density [kg/m3] brookdale
+q(2)    = 39.77977/100;                 % Clay content [%] brookdale
+q(7)    = mean(Data(25:36,12))/1.72/100; % Concentration of SOC [%] brookdale
+q(8)    = 1.939333;                     % Particle density [kg/m3] brookdale
+SR_br_a = plotting_DAMM(x5,p,q);
 x_5     = Data(25:30,2)*100;
 SR_5o   = Data(25:30,8);
 SR_5sd  = Data(25:30,9)/sqrt(length(x_5));
 
 load('brookdale_drought.mat');
-x6      = linspace(0.04,0.427,43);
-SR_br_d = plotting_DAMM(x6,p);
+x6      = linspace(0.025,0.6859,100);
+q(1)    = mean(Data(25:36,4));          % Bulk density [kg/m3] brookdale
+q(2)    = 39.77977/100;                 % Clay content [%] brookdale
+q(7)    = mean(Data(25:36,12))/1.72/100; % Concentration of SOC [%] brookdale
+q(8)    = 1.939333;                     % Particle density [kg/m3] brookdale
+SR_br_d = plotting_DAMM(x6,p,q);
 x_6     = Data(31:36,2)*100;
 SR_6o   = Data(31:36,8);
 SR_6sd  = Data(31:36,9)/sqrt(length(x_6));
