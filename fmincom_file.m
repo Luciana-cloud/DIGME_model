@@ -53,3 +53,27 @@ save('brhill_ambient_NICHE.mat','p')
 save('brhill_drought_NICHE.mat','p')
 save('brookdale_ambient_NICHE.mat','p')
 save('brookdale_drought_NICHE.mat','p')
+
+%%
+p = [0.01 0.5 1.5 0.05];
+
+%%
+
+ObjectiveFunction = @calibration_vg;
+
+A = [];
+b = [];
+Aeq = [];
+beq = [];
+
+ub = [1 1 5 25];
+lb = [0.001 0.001 0.001 0.1];
+
+p0 = p;
+
+nonlcon = [];
+options = optimoptions(@fmincon,'MaxFunEvals',100000);
+
+[p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%%
