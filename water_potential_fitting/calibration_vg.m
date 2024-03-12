@@ -133,8 +133,8 @@ WC_sim      = van_genuchten(x,p);
 % WC_obs      = Data(109:114,1);
 % WC_sd       = Data(109:114,2);
 % Lygra.no_A_2_7 drought
-% WC_obs      = Data(115:120,1);
-% WC_sd       = Data(115:120,2);
+% % WC_obs      = Data(115:120,1);
+% % WC_sd       = Data(115:120,2);
 % P12_A_1C_7 ambient
 % WC_obs      = Data(121:126,1);
 % WC_sd       = Data(121:126,2);
@@ -165,8 +165,8 @@ WC_sim      = van_genuchten(x,p);
 % WC_obs      = Data(37:40,1);
 % WC_sd       = Data(37:40,2);
 % skotsvar.no drought
-WC_obs      = Data(41:44,1);
-WC_sd       = Data(41:44,2);
+% WC_obs      = Data(41:44,1);
+% WC_sd       = Data(41:44,2);
 % GIG_A_7C_7 ambient
 % WC_obs      = Data(45:50,1);
 % WC_sd       = Data(45:50,2);
@@ -186,7 +186,7 @@ WC_sd       = Data(41:44,2);
 % WC_obs      = Data(75:80,1);
 % WC_sd       = Data(75:80,2);
 
-SSE_1       = (sum(((WC_obs-WC_sim)./WC_sd).^2))./length(WC_sim);
+% SSE_1       = (sum(((WC_obs-WC_sim)./WC_sd).^2))./length(WC_sim);
 
 % WC_obs           = Data(1:6,1);          % Passogavia Ambient
 % WC_obs           = Data(7:12,1);         % Passogavia Drought
