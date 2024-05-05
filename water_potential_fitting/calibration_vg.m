@@ -26,7 +26,7 @@ function [SSE] = calibration_vg(p)
 % x           = Data(121:126,3);    % P12_A_1C_7 Ambient
 % x           = Data(127:132,3);    % P12_A_1C_7 Drought
 
-% Data        = load("water_pontential_trt_level.txt");
+Data        = load("water_pontential_trt_level.txt");
 % x           = Data(1:6,2);          % Passogavia Ambient
 % x           = Data(7:12,2);         % Passogavia Drought
 % x           = Data(13:18,2);        % Dona Ana Ambient
@@ -44,7 +44,7 @@ function [SSE] = calibration_vg(p)
 % x           = Data(85:90,2);        % Ukulinga, ZA Ambient
 % x           = Data(91:96,2);        % Ukulinga, ZA Drought
 % x           = Data(97:99,2);        % Waqecha, PE Ambient
-% x           = Data(100:102,2);      % Waqecha, PE Drought
+x           = Data(100:102,2);      % Waqecha, PE Drought
 
 % Data        = load("water_pontential_conversion_obs.txt");
 % x           = Data(1:6,3);        % nyngan.au Ambient
@@ -205,9 +205,9 @@ WC_sim      = van_genuchten(x,p);
 % WC_obs           = Data(85:90,1);        % Ukulinga, ZA Ambient
 % WC_obs           = Data(91:96,1);        % Ukulinga, ZA Drought
 % WC_obs           = Data(97:99,1);        % Waqecha, PE Ambient
-% WC_obs           = Data(100:102,1);      % Waqecha, PE Drought
+WC_obs           = Data(100:102,1);      % Waqecha, PE Drought
 
-% SSE_1       = (sum(((WC_obs-WC_sim)).^2))./length(WC_sim);
+SSE_1       = (sum(((WC_obs-WC_sim)).^2))./length(WC_sim);
 
 SSE         = SSE_1^0.5
 
