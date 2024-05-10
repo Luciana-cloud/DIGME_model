@@ -81,7 +81,7 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 [p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
 
 %%
-p = [1 0.5];
+p = [1 0.5 0.101]; % 0.0501, 0.101
 %%
 ObjectiveFunction = @calibration_manzoni;
 
@@ -90,8 +90,8 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [3 1e1];
-lb = [-1 1e-2];
+ub = [3 1e1 0.4];
+lb = [-1 1e-2 0.1];
 
 p0 = p;
 
