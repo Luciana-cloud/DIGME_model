@@ -1,4 +1,4 @@
-function [theta] = van_genuchten(x,p)
+function [theta] = van_genuchten(x,p,q)
 
 % Variables 
 
@@ -6,10 +6,14 @@ psi     = x; % Water pontential [Kpa]
 
 % Parameters
 
-theta_r = p(1); % Residual soil water content [g/g]
-theta_s = p(2); % Saturated soil moisture content [g/g]
-n       = p(3); % Curve shape parameters [-]
-alpha   = p(4); % Scaling parameter [1/cm]   
+n       = p(1); % Curve shape parameters [-]
+alpha   = p(2); % Scaling parameter [1/cm]   
+% theta_r = p(3); % Residual soil water content [g/g]
+
+% Constants
+
+theta_s = q(1); % Saturated soil moisture content [g/g]
+theta_r = q(2); % Residual soil water content [g/g]
 
 % Functions
 

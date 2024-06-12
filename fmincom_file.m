@@ -55,7 +55,7 @@ save('brookdale_ambient_NICHE.mat','p')
 save('brookdale_drought_NICHE.mat','p')
 
 %%
-p = [0.01 0.5 1.5 0.05];
+p = [1.5 0.05];
 
 %%
 
@@ -66,9 +66,8 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [0.25 1.8 5 5]; % 0.85/1 (organic soils)
-% ub = [0.05 1.0 5 5]; % 0.85/1 (organic soils)
-lb = [0.001 0.001 0.001 0.01];
+ub = [5 10000]; % 0.85/1 (organic soils)
+lb = [0.001 0.01];
 
 % ub = [p(1) 0.85 5 p(4)]; % 0.85/1
 % lb = [p(1) 0.001 0.001 p(4)];
