@@ -1,61 +1,7 @@
-p = [1 0.05 0.005];
-%% 
-ObjectiveFunction = @calibration_DAMM;
-
-A = [];
-b = [];
-Aeq = [];
-beq = [];
-
-ub = [1e2 1e1 1e2];
-lb = [1e-2 1e-5 1e-6];
-
-p0 = p;
-
-nonlcon = [];
-options = optimoptions(@fmincon,'MaxFunEvals',100000);
-
-[p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
 
 %%
-
-save('Ayora_ambient.mat','p')
-save('Ayora_drought.mat','p')
-save('brhill_ambient.mat','p')
-save('brhill_drought.mat','p')
-save('brookdale_ambient.mat','p')
-save('brookdale_drought.mat','p')
-
-%%
-p = [0.5 0.5 0.01 1];
-%%
-ObjectiveFunction = @calibration_NICHE;
-
-A = [];
-b = [];
-Aeq = [];
-beq = [];
-
-ub = [1e2 0.5 1e1 10];
-lb = [1e-2 0.001 1e-3 0.5];
-
-p0 = p;
-
-nonlcon = [];
-options = optimoptions(@fmincon,'MaxFunEvals',100000);
-
-[p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
-
-%%
-save('Ayora_ambient_NICHE.mat','p')
-save('Ayora_drought_NICHE.mat','p')
-save('brhill_ambient_NICHE.mat','p')
-save('brhill_drought_NICHE.mat','p')
-save('brookdale_ambient_NICHE.mat','p')
-save('brookdale_drought_NICHE.mat','p')
-
-%%
-p = [1.5 0.05];
+p = [1.5 0.05 0.1];
+% p = [1.5 0.05];
 
 %%
 
@@ -66,11 +12,10 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [5 10000]; % 0.85/1 (organic soils)
-lb = [0.001 0.01];
-
-% ub = [p(1) 0.85 5 p(4)]; % 0.85/1
-% lb = [p(1) 0.001 0.001 p(4)];
+% ub = [5 10];  
+% lb = [0.001 0.01];
+ub = [5 10 1]; % *cedarsav.us 
+lb = [0.001 0.01 0.33];
 
 p0 = p;
 
@@ -78,6 +23,34 @@ nonlcon = [];
 options = optimoptions(@fmincon,'MaxFunEvals',100000);
 
 [p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%%
+save('Ayora.mat','p')
+save('GIG.mat','p')
+save('P12.mat','p')
+save('P13.mat','p')
+save('PNE_unburned.mat','p')
+save('Purdue.us.mat','p')
+save('Sev.mix.mat','p')
+save('baddrt.de.mat','p')
+save('brhill.au.mat','p')
+save('brookdale.ca.mat','p')
+save('cobar.au.mat','p')
+save('cowidrt.ca.mat','p')
+save('dona.ana.mat','p')
+save('hoide.de.mat','p')
+save('horacg.cr.mat','p')
+save('nyngan.au.mat','p')
+save('riomayo.ar.mat','p')
+save('scruzl.us.mat','p')
+save('sgsdrt.us.mat','p')
+save('ukulingadrt.za.mat','p')
+save('wayqe.re.mat','p')
+save('cedarsav.us.mat','p')
+save('hyide.de.mat','p')
+save('lygra.no.mat','p')
+save('passogavia.it.mat','p')
+save('skotsvar.no.mat','p')
 
 %%
 p = [1 0.5 0.101]; % 0.0501, 0.101
