@@ -5,6 +5,6 @@
 DIGME_model.Rproj
 *.mat
 *.txt
-*.csv
+.csv
 *xlsx
 *.mat
