@@ -149,3 +149,33 @@ WP_matlab$WVC_mean[is.na(WP_matlab$WVC_mean)] = "NaN"
 WP_matlab$WVC_sd[is.na(WP_matlab$WVC_sd)] = "NaN"
 write.table(WP_matlab, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/WP_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
+
+# Water Potential Curves - Ploting and conversion ----
+
+# Data preparation
+Site             = unique(data_BD$SiteCode)
+parameters_VG    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/parameters_VG.csv",dec=".")
+parameters_VG    = as.data.frame(cbind(Site,parameters_VG))
+write.csv(parameters_VG, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_parameters_VG.csv")
+
+# Data merge with global dataset
+
+DIGME_data_global   = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_data_global.csv",dec=".")
+
+DIGME_data_global.1 = c()
+for(i in a){
+  d.1    = DIGME_data_global %>% filter(SiteCode == i)
+  d.2    = parameters_VG %>% filter(Site == i)
+  temp.1 = d.1 %>% mutate(theta = (as.numeric(unlist(d.1$ActualVWC)) - d.2$theta_r)/(d.2$theta_s - d.2$theta_r)) %>%
+    mutate(m = rep(1 - 1/d.2$n,each=nrow(d.1)))
+  temp.2 = temp.1 %>% mutate(m_1 = 1/temp.1$m) %>% 
+    mutate(n_1 = rep(1/d.2$n,each=nrow(d.1))) %>%
+    mutate(alpha_1 = rep(1/d.2$alpha,each=nrow(d.1)))
+  temp.3 = temp.2 %>% mutate(ActualWP = temp.2$alpha_1*((1/(temp.2$theta)^temp.2$m_1)-1)^temp.2$n_1) 
+  DIGME_data_global.1 = rbind(DIGME_data_global.1, temp.3) 
+}
+
+write.csv(DIGME_data_global.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_data_global.csv")
+
+# Data merge with global dataset
+
