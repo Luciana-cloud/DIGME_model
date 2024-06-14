@@ -154,9 +154,13 @@ write.table(WP_matlab, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_mod
 
 # Data preparation
 Site             = unique(data_BD$SiteCode)
-parameters_VG    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/parameters_VG.csv",dec=".")
+parameters_VG    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/water_potential_fitting/calibrated_parameters/parameters_VG.csv",dec=".")
 parameters_VG    = as.data.frame(cbind(Site,parameters_VG))
-write.csv(parameters_VG, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_parameters_VG.csv")
+write.csv(parameters_VG, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_VG.csv")
+# Writing in google drive
+sheet_write(parameters_VG,
+            ss = "https://docs.google.com/spreadsheets/d/1OJcBfY9yMwQdk1TSoiQ7dzffZxdhucWY6p0QqFClAIo/edit?gid=0#gid=0",
+            sheet = "parameters_VG")
 
 # Data merge with global dataset
 
@@ -175,7 +179,10 @@ for(i in a){
   DIGME_data_global.1 = rbind(DIGME_data_global.1, temp.3) 
 }
 
-write.csv(DIGME_data_global.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_data_global.csv")
+write.csv(DIGME_data_global.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_data_global.csv")
+# Writing in google drive
+sheet_write(DIGME_data_global.1,
+            ss = "https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0",
+            sheet = "DIGME_data_global")
 
-# Data merge with global dataset
 
