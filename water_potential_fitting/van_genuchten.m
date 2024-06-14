@@ -1,4 +1,4 @@
-function [theta] = van_genuchten(x,p,q)
+function [theta] = van_genuchten(x,p)
 
 % Variables 
 
