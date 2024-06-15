@@ -185,4 +185,26 @@ sheet_write(DIGME_data_global.1,
             ss = "https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0",
             sheet = "DIGME_data_global")
 
+# Manzoni Model - Data preparation----
 
+data_manzoni = DIGME_data_global.1 %>% select(c("SiteCode","RainTrt","CO2_eq",
+                                                "SOM","ActualVWC","ActualWP"))
+# Determine soil organic carbon = SOM/1.72
+data_manzoni = data_manzoni %>% mutate(SOC = SOM/1.72)
+# Normalize CO2 flux by SOC
+data_manzoni = data_manzoni %>% mutate(CO2_norm = CO2_eq/SOC)
+# Omit NAs
+data_manzoni.1 = na.omit(data_manzoni)
+# Reorganize treatments
+data_manzoni.2 = c()
+for(i in a){
+  d.1    = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
+  d.2    = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Drought")
+  temp.1 = rbind(d.1,d.2)
+  data_manzoni.2 = rbind(data_manzoni.2, temp.1) 
+}
+# Save for matlab processing
+data_manzoni.2 = data_manzoni.2 %>% select(c("ActualVWC","ActualWP","CO2_norm"))
+write.csv(data_manzoni.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
+write.table(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
+            row.names = TRUE, col.names = FALSE,quote = FALSE)
