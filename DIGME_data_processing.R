@@ -150,7 +150,7 @@ WP_matlab$WVC_sd[is.na(WP_matlab$WVC_sd)] = "NaN"
 write.table(WP_matlab, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/WP_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
 
-# Water Potential Curves - Ploting and conversion ----
+# Water Potential Curves - Plotting and conversion ----
 
 # Data preparation
 Site             = unique(data_BD$SiteCode)
@@ -210,7 +210,7 @@ data_manzoni.2 = data_manzoni.2 %>% select(c("ActualVWC","ActualWP","CO2_norm"))
 write.table(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
 
-# Manzoni Model Results - Ploting and conversion ----
+# Manzoni Model Results - Plotting and conversion ----
 
 # Data preparation
 Site                  = unique(data_BD$SiteCode)
