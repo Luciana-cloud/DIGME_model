@@ -203,8 +203,23 @@ for(i in a){
   temp.1 = rbind(d.1,d.2)
   data_manzoni.2 = rbind(data_manzoni.2, temp.1) 
 }
+write.csv(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
+
 # Save for matlab processing
 data_manzoni.2 = data_manzoni.2 %>% select(c("ActualVWC","ActualWP","CO2_norm"))
-write.csv(data_manzoni.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
 write.table(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
+
+# Manzoni Model Results - Ploting and conversion ----
+
+# Data preparation
+Site                  = unique(data_BD$SiteCode)
+Site                  = rep(Site,each = 2)
+RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
+parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/manzoni_2012/parameters_manzoni.csv",dec=".")
+parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
+write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni.csv")
+# Writing in google drive
+sheet_write(parameters_manzoni,
+            ss = "https://docs.google.com/spreadsheets/d/1a77xdxHZ6yH4D0j0ATR1gzKu2CNQoq5-5W0PJkTnjUs/edit?gid=0#gid=0",
+            sheet = "parameters_manzoni")
