@@ -9,6 +9,7 @@ library(ggpubr)
 library("stringr") 
 library(domir)
 library(car)
+library(matrixStats)
 
 # Input data----
 # Physicochemical description
@@ -189,15 +190,28 @@ sheet_write(DIGME_data_global.1,
 
 # Manzoni Model - Data preparation----
 
-data_manzoni = DIGME_data_global.1 %>% select(c("SiteCode","RainTrt","CO2_eq",
-                                                "SOM","ActualVWC","ActualWP"))
-# Determine soil organic carbon = SOM/1.72
-data_manzoni = data_manzoni %>% mutate(SOC = SOM/1.72)
-# Normalize CO2 flux by SOC
-data_manzoni = data_manzoni %>% mutate(CO2_norm = CO2_eq/SOC)
+DIGME_data_global.1 = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
+data_manzoni        = DIGME_data_global.1 %>% select(c("SiteCode","RainTrt","CO2_w1b",
+                                                       "CO2_w2a","CO2_w2b","CO2_eq","MBC",
+                                                       "SOM","ActualVWC","ActualWP"))
+# Normalize CO2 flux by Microbial Soil Carbon MBC 
+# [Units = microgram CO2/milligram of microbial C/hour]
+data_manzoni[,c(3)] = as.numeric(unlist(data_manzoni[,c(3)]))/
+  as.numeric(unlist(data_manzoni[,7]))
+data_manzoni[,c(4)] = as.numeric(unlist(data_manzoni[,c(4)]))/
+  as.numeric(unlist(data_manzoni[,7]))
+data_manzoni[,c(5)] = as.numeric(unlist(data_manzoni[,c(5)]))/
+  as.numeric(unlist(data_manzoni[,7]))
+data_manzoni[,c(6)] = as.numeric(unlist(data_manzoni[,c(6)]))/
+  as.numeric(unlist(data_manzoni[,7]))
+
+# Obtain standard deviation of CO2 fluxes
+data_manzoni = data_manzoni %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni[,c(3,4,5)]),
+                                                       na.rm = TRUE))
 # Omit NAs
 data_manzoni.1 = na.omit(data_manzoni)
 # Reorganize treatments
+a              = unique(data_manzoni.1$SiteCode)
 data_manzoni.2 = c()
 for(i in a){
   d.1    = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
@@ -208,14 +222,15 @@ for(i in a){
 write.csv(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
 
 # Save for matlab processing
-data_manzoni.2 = data_manzoni.2 %>% select(c("ActualVWC","ActualWP","CO2_norm"))
+data_manzoni.2 = data_manzoni.2 %>% select(c("ActualVWC","ActualWP","CO2_eq","CO2_sd"))
 write.table(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
+rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1)
 
 # Manzoni Model Results - Plotting and conversion ----
 
 # Data preparation
-Site                  = unique(data_BD$SiteCode)
+Site                  = unique(DIGME_data_global.1$SiteCode)
 Site                  = rep(Site,each = 2)
 RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
 parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/manzoni_2012/parameters_manzoni.csv",dec=".")
