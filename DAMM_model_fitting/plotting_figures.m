@@ -1,30 +1,41 @@
 %% Plotting models %%
 
-Data    = load("DIGME_mean.2.txt");
+data        = load("data_manzoni_matlab.txt");
 
 %% DAMM model results
 
-load('Ayora_ambient.mat');
-x1     = linspace(0.04,0.43,42);
-q(1)   = mean(Data(1:12,4));           % Bulk density [kg/m3] Ayora
-q(2)   = 30.99430/100;                 % Clay content [%] Ayora
-q(7)   = mean(Data(1:12,12))/1.72/100;  % Concentration of SOC [%] Ayora
-q(8)   = 1.939333;                     % Particle density [kg/m3] brookdale
-SR_a_a = plotting_DAMM(x1,p,q);
-x_1    = Data(1:6,2)*100;
-SR_1o  = Data(1:6,8);
-SR_1sd = Data(1:6,9)/sqrt(length(x_1));
+load('Ayora_ambient_DAMM.mat','p')
 
-load('Ayora_drought.mat');
-x2     = linspace(0.04,0.437,42.5);
-q(1)   = mean(Data(1:12,4));           % Bulk density [kg/m3] Ayora
+q(1)   = 1.008598957;           % Bulk density [kg/m3] Ayora
 q(2)   = 30.99430/100;                 % Clay content [%] Ayora
-q(7)   = mean(Data(1:12,12))/1.72/100;  % Concentration of SOC [%] Ayora
-q(8)   = 1.939333;                     % Particle density [kg/m3] brookdale
-SR_a_d = plotting_DAMM(x2,p,q);
-x_2    = Data(7:12,2)*100;
-SR_2o  = Data(7:12,8);
-SR_2sd = Data(7:12,9)/sqrt(length(x_2));
+q(7)   = 0.0832;  % Concentration of SOC [%] Ayora
+q(8)   = 2.0375;                     % Particle density [kg/m3] brookdale
+rho_b       = q(1); % Bulk density [kg/m3]
+pd          = q(8); % Particle density [kg/m3]
+phi         = 1 - (rho_b/pd);
+x1     = linspace(0.05,0.45,100);
+SR_a_a = plotting_DAMM(x1,p,q);
+x_s         = x1/phi;
+x_1    = data(1:17,2)/phi; % Ayora.ES - Ambient
+max_f       = max(data(1:17,4)); % Ayora.ES - Ambient - maximum respiration
+SR_obs      = data(1:17,4)/max_f; % Ayora.ES - Ambient
+SR_sd       = data(1:17,5)/max_f; % Ayora.ES - Ambient
+
+load('Ayora_drought_DAMM.mat')
+q(1)   = 1.008598957;           % Bulk density [kg/m3] Ayora
+q(2)   = 30.99430/100;                 % Clay content [%] Ayora
+q(7)   = 0.0832;  % Concentration of SOC [%] Ayora
+q(8)   = 2.0375;                     % Particle density [kg/m3] brookdale
+rho_b       = q(1); % Bulk density [kg/m3]
+pd          = q(8); % Particle density [kg/m3]
+phi         = 1 - (rho_b/pd);
+x1     = linspace(0.05,0.45,100);
+SR_a_a_1 = plotting_DAMM(x1,p,q);
+x_s_1         = x1/phi;
+x_1_1         = data(18:34,2)/phi; % Ayora.ES - Ambient
+max_f         = max(data(18:34,4)); % Ayora.ES - Ambient - maximum respiration
+SR_obs_1      = data(18:34,4)/max_f; % Ayora.ES - Ambient
+SR_sd_1       = data(18:34,5)/max_f; % Ayora.ES - Ambient
 
 load('brhill_ambient.mat');
 x3     = linspace(0.018,0.35,45);
