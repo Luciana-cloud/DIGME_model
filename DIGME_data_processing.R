@@ -189,24 +189,24 @@ sheet_write(DIGME_data_global.1,
             sheet = "DIGME_data_global")
 
 # Manzoni Model - Data preparation----
-
 DIGME_data_global.1 = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
 data_manzoni        = DIGME_data_global.1 %>% select(c("SiteCode","RainTrt","CO2_w1b",
-                                                       "CO2_w2a","CO2_w2b","CO2_eq","MBC",
+                                                       "CO2_w2a","CO2_w2b","CO2_eq",
                                                        "SOM","ActualVWC","ActualWP"))
-# Normalize CO2 flux by Microbial Soil Carbon MBC 
-# [Units = microgram CO2/milligram of microbial C/hour]
-data_manzoni[,c(3)] = as.numeric(unlist(data_manzoni[,c(3)]))/
-  as.numeric(unlist(data_manzoni[,7]))
-data_manzoni[,c(4)] = as.numeric(unlist(data_manzoni[,c(4)]))/
-  as.numeric(unlist(data_manzoni[,7]))
-data_manzoni[,c(5)] = as.numeric(unlist(data_manzoni[,c(5)]))/
-  as.numeric(unlist(data_manzoni[,7]))
-data_manzoni[,c(6)] = as.numeric(unlist(data_manzoni[,c(6)]))/
-  as.numeric(unlist(data_manzoni[,7]))
+# Replace all higher WP values by the threshold of 1000 Bars, assuming that we should
+# not have microbial activity below 1000 bars
+data_manzoni$ActualWP[data_manzoni$ActualWP > 1000] = 1000
+
+# Determine soil organic carbon = SOM/1.72
+data_manzoni = data_manzoni %>% mutate(SOC = SOM/1.72)
+# Normalize CO2 flux by SOC
+data_manzoni = data_manzoni %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>% 
+  mutate(CO2_w1b_norm = as.numeric(unlist(CO2_w1b))/SOC) %>% 
+  mutate(CO2_w2a_norm = as.numeric(unlist(CO2_w2a))/SOC) %>%
+  mutate(CO2_w2b_norm = as.numeric(unlist(CO2_w2b))/SOC)
 
 # Obtain standard deviation of CO2 fluxes
-data_manzoni = data_manzoni %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni[,c(3,4,5)]),
+data_manzoni = data_manzoni %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni[,c(12,13,14)]),
                                                        na.rm = TRUE))
 # Omit NAs
 data_manzoni.1 = na.omit(data_manzoni)
@@ -219,13 +219,40 @@ for(i in a){
   temp.1 = rbind(d.1,d.2)
   data_manzoni.2 = rbind(data_manzoni.2, temp.1) 
 }
-write.csv(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
+
+# 3Sigma rule to check for outliers for the CO2 repetitions----
+# https://www.jstor.org/stable/2684253?seq=1
+data_manzoni.2 = data_manzoni.2 %>% mutate(sigma_rule = CO2_eq_norm + 3*CO2_sd)
+data_manzoni.3 = data_manzoni.2 %>% mutate(sigma_result.1 = case_when(CO2_w1b_norm >= sigma_rule ~ 0,
+                                                                    CO2_w1b_norm <  sigma_rule ~ 1))
+data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.2 = case_when(CO2_w2a_norm >= sigma_rule ~ 0,
+                                                                      CO2_w2a_norm <  sigma_rule ~ 1))
+data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.3 = case_when(CO2_w2b_norm >= sigma_rule ~ 0,
+                                                                      CO2_w2b_norm <  sigma_rule ~ 1))
+# 3Sigma rule to check for outliers for the SOM----
+data_manzoni.4 = c()
+b              = c("Ambient","Drought")
+for(i in a){
+  d.1    = data_manzoni.2 %>% filter(SiteCode == i&RainTrt=="Ambient")
+  d.2    = data_manzoni.2 %>% filter(SiteCode == i&RainTrt=="Drought")
+  sigma_val.d1 = mean(d.1$SOM) + 3*sd(d.1$SOM)
+  sigma_val.d2 = mean(d.2$SOM) + 3*sd(d.2$SOM)
+  d.1       = d.1 %>% mutate(sigma_SOM = case_when(SOM >= sigma_val.d1 ~ 0,
+                                                   SOM <  sigma_val.d1 ~ 1))
+  d.2       = d.2 %>% mutate(sigma_SOM = case_when(SOM >= sigma_val.d2 ~ 0,
+                                                   SOM <  sigma_val.d2 ~ 1)) 
+  temp.1 = rbind(d.1,d.2)
+  data_manzoni.4 = rbind(data_manzoni.4, temp.1) 
+}
+# Erase zeros
+data_manzoni.5 = data_manzoni.4 %>% filter(as.numeric(unlist(sigma_SOM)) > 0)
+write.csv(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
 
 # Save for matlab processing
-data_manzoni.2 = data_manzoni.2 %>% select(c("ActualVWC","ActualWP","CO2_eq","CO2_sd"))
-write.table(data_manzoni.2, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
+data_manzoni.5 = data_manzoni.5 %>% select(c("ActualVWC","ActualWP","CO2_eq_norm","CO2_sd"))
+write.table(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
-rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1)
+rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_val.d2)
 
 # Manzoni Model Results - Plotting and conversion ----
 
