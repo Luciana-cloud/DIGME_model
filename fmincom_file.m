@@ -53,7 +53,7 @@ save('passogavia.it.mat','p')
 save('skotsvar.no.mat','p')
 
 %%
-p = [1.8 1 0.0101]; % 0.0101; 0.00101; 0.000101
+p = [1.3 1 0.0101]; % 0.0101; 0.00101; 0.000101
 %%
 ObjectiveFunction = @calibration_manzoni;
 
@@ -62,7 +62,7 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [3.1 1.1 0.5]; % 0.5
+ub = [3.1 1e2 0.5]; % 1e2
 lb = [-1 1e-2 0.01]; % 0.01; 0.001; 0.00001 
 
 p0 = p;
@@ -80,7 +80,7 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 % save('P12_ambient.mat','p')
 % save('P12_drought.mat','p')
 % save('P13_ambient.mat','p')
-save('P13_drought.mat','p')
+% save('P13_drought.mat','p')
 % save('PNE_unburned_ambient.mat','p')
 % save('PNE_unburned_drought.mat','p')
 % save('Purdue.us_ambient.mat','p')
