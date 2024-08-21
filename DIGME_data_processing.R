@@ -197,28 +197,45 @@ data_manzoni        = DIGME_data_global.1 %>% select(c("SiteCode","RainTrt","CO2
 # not have microbial activity below 1000 bars
 data_manzoni$ActualWP[data_manzoni$ActualWP > 1000] = 1000
 
+# Reorganize treatments
+a              = unique(data_manzoni$SiteCode)
+data_manzoni.1 = c()
+for(i in a){
+  d.1    = data_manzoni %>% filter(SiteCode == i&RainTrt=="Ambient")
+  d.2    = data_manzoni %>% filter(SiteCode == i&RainTrt=="Drought")
+  temp.1 = rbind(d.1,d.2)
+  data_manzoni.1 = rbind(data_manzoni.1, temp.1) 
+}
+
+# Complete with the mean value
+a              = unique(data_manzoni$SiteCode)
+data_manzoni.2 = c()
+for(i in a){
+  d.1     = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
+  meam_am = mean(d.1$SOM,na.rm = TRUE)
+  temp1   = d.1 %>% mutate(SOM = case_when(SOM  = is.na(SOM) ~ meam_am,
+                                           SOM !=is.na(SOM)  ~ SOM)) 
+  d.2     = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Drought")
+  meam_dr = mean(d.2$SOM,na.rm = TRUE)
+  temp2   = d.2 %>% mutate(SOM = case_when(SOM  = is.na(SOM) ~ meam_dr,
+                                           SOM !=is.na(SOM)  ~ SOM))
+  temp.1  = rbind(temp1,temp2)
+  data_manzoni.2 = rbind(data_manzoni.2, temp.1) 
+}
+
 # Determine soil organic carbon = SOM/1.72
-data_manzoni = data_manzoni %>% mutate(SOC = SOM/1.72)
+data_manzoni.2 = data_manzoni.2 %>% mutate(SOC = SOM/1.72)
 # Normalize CO2 flux by SOC
-data_manzoni = data_manzoni %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>% 
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>% 
   mutate(CO2_w1b_norm = as.numeric(unlist(CO2_w1b))/SOC) %>% 
   mutate(CO2_w2a_norm = as.numeric(unlist(CO2_w2a))/SOC) %>%
   mutate(CO2_w2b_norm = as.numeric(unlist(CO2_w2b))/SOC)
 
 # Obtain standard deviation of CO2 fluxes
-data_manzoni = data_manzoni %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni[,c(12,13,14)]),
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni.2[,c(12,13,14)]),
                                                        na.rm = TRUE))
 # Omit NAs
-data_manzoni.1 = na.omit(data_manzoni)
-# Reorganize treatments
-a              = unique(data_manzoni.1$SiteCode)
-data_manzoni.2 = c()
-for(i in a){
-  d.1    = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
-  d.2    = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Drought")
-  temp.1 = rbind(d.1,d.2)
-  data_manzoni.2 = rbind(data_manzoni.2, temp.1) 
-}
+data_manzoni.2 = na.omit(data_manzoni.2)
 
 # 3Sigma rule to check for outliers for the CO2 repetitions----
 # https://www.jstor.org/stable/2684253?seq=1
@@ -233,8 +250,8 @@ data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.3 = case_when(CO2_w2b_no
 data_manzoni.4 = c()
 b              = c("Ambient","Drought")
 for(i in a){
-  d.1    = data_manzoni.2 %>% filter(SiteCode == i&RainTrt=="Ambient")
-  d.2    = data_manzoni.2 %>% filter(SiteCode == i&RainTrt=="Drought")
+  d.1    = data_manzoni.3 %>% filter(SiteCode == i&RainTrt=="Ambient")
+  d.2    = data_manzoni.3 %>% filter(SiteCode == i&RainTrt=="Drought")
   sigma_val.d1 = mean(d.1$SOM) + 3*sd(d.1$SOM)
   sigma_val.d2 = mean(d.2$SOM) + 3*sd(d.2$SOM)
   d.1       = d.1 %>% mutate(sigma_SOM = case_when(SOM >= sigma_val.d1 ~ 0,
@@ -252,7 +269,8 @@ write.csv(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_
 data_manzoni.5 = data_manzoni.5 %>% select(c("ActualVWC","ActualWP","CO2_eq_norm","CO2_sd"))
 write.table(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
-rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_val.d2)
+rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_val.d2,b,
+   meam_am,meam_dr,temp1,temp2)
 
 # Manzoni Model Results - Plotting and conversion ----
 
@@ -321,12 +339,12 @@ DIGME.global = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2Oh
 
 # Remove sites with a small sample size
 manzoni.data = manzoni.data %>% filter(sample.size > 11)
-manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.05 ~ 0,
-                                                                p.value <  0.05 ~ 1))
+manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.1 ~ 0,
+                                                                p.value <  0.1 ~ 1))
 # Soil characteristics
 DIGME.global.soil = DIGME.global %>% select(c("SiteCode","RainTrt","pH","DOC",
                                               "MBC","SOM","MAP","MAP_CV","MAT",
-                                              "USDA_class")) 
+                                              "Sand","Clay")) 
 DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>% 
   summarise(mean.pH     = mean(as.numeric(unlist(pH)),na.rm = TRUE),
             mean.DOC    = mean(as.numeric(unlist(DOC)),na.rm = TRUE),
@@ -335,10 +353,8 @@ DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>%
             mean.MAP    = mean(as.numeric(unlist(MAP)),na.rm = TRUE),
             mean.MAP_CV = mean(as.numeric(unlist(MAP_CV)),na.rm = TRUE),
             mean.MAT    = mean(as.numeric(unlist(MAT)),na.rm = TRUE),
-            USDA_class  = list(unique(USDA_class)))
-# Delete the sites with small sample size
-DIGME.global.soil  = DIGME.global.soil[DIGME.global.soil$SiteCode %in% manzoni.data$Site, ]
-colnames(DIGME.global.soil)[1]  = "Site"
+            mean_sand   = mean(as.numeric(unlist(Sand)),na.rm = TRUE),
+            mean_clay   = mean(as.numeric(unlist(Clay)),na.rm = TRUE))
 
 # Join both datasets
 manzoni.data.soil = left_join(manzoni.data,DIGME.global.soil, by=c('Site',"RainTrt"))
@@ -346,88 +362,67 @@ manzoni.data.soil = left_join(manzoni.data,DIGME.global.soil, by=c('Site',"RainT
 sheet_write(manzoni.data.soil,
             ss = "https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0",
             sheet = "manzoni.data.soil")
-# Testing Linear models----
-manzoni.data.soil   = read_sheet("https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0")
-manzoni.data.soil.1 = manzoni.data.soil %>% select("Site","RainTrt","alpha",
-                                                   "sample.size","performance",
-                                                   "mean.pH","mean.DOC","mean.MBC",
-                                                   "mean.SOM","mean.MAP","mean.MAP_CV",
-                                                   "mean.MAT","USDA_class")
-# Normalize data
-manzoni.data.soil.1[,c(4,6:12)] = scale(manzoni.data.soil.1[,c(4,6:12)])
 
-# Model Performance----
-# https://statsandr.com/blog/binary-logistic-regression-in-r/
-model_performance   = glm(performance ~ (RainTrt + sample.size + mean.MAP +
-                                           mean.MAT + mean.DOC + mean.SOM)^2, 
-                        data = manzoni.data.soil.1, family = binomial)
-summary(model_performance)
-
-# select best model according to AIC using mixed selection
-model_performance.red      = step(model_performance,
-                 direction = "both", # both = mixed selection
-                 trace     = FALSE) # do not display intermediate steps
-summary(model_performance.red)
-
-# Parameter ranking
-dominance_performance.red  = domin(performance ~ 1, 
-                                   glm, 
-                                   list(function(x) list(aic = extractAIC(x)[[2]]), "aic"), 
-                               data = manzoni.data.soil.1, 
-                               sets = list("RainTrt","sample.size","mean.MAP",
-                                           "mean.MAT","mean.DOC","mean.SOM",
-                                           "RainTrt:sample.size","RainTrt:mean.DOC ",
-                                           "RainTrt:mean.SOM", "sample.size:mean.MAP",
-                                           "sample.size:mean.MAT", "mean.MAP:mean.MAT",
-                                           "mean.MAP:mean.DOC", "mean.MAP:mean.SOM")) 
-dominance_performance.red
-
-# Model for alpha parameter (Other factors) Filter for only good performance fits----
-manzoni.data.soil.2 = manzoni.data.soil.1 %>% filter(performance == 1)
-model_alpha         = lm(alpha ~ (RainTrt + mean.MAP + mean.MAT + 
-                              mean.DOC + mean.SOM + mean.pH)^2, 
-                   data = manzoni.data.soil.2)
-summary(model_alpha)
-plot(model_alpha, which = 1:6)
-
-model_alpha.red         = step(model_alpha,
-                                  direction = "both", # both = mixed selection
-                                  trace     = FALSE) # do not display intermediate steps
-summary(model_alpha.red)
-plot(model_alpha.red, which = 1:6)
-
-# Parameter Ranking
-dominance_alpha.red  = domin(alpha ~  1 ,
-      lm,
-      list("summary", "r.squared"),
-      data = manzoni.data.soil.2,
-      sets = list("RainTrt","mean.MAP","mean.pH",
-                  "mean.MAT","mean.DOC","mean.SOM","RainTrt:mean.MAP",
-                  "RainTrt:mean.DOC","RainTrt:mean.SOM","mean.MAP:mean.MAT",
-                  "mean.MAP:mean.SOM","mean.MAT:mean.DOC","mean.MAT:mean.SOM",
-                  "mean.MAT:mean.pH","mean.DOC:mean.pH"))
-dominance_alpha.red
-
-# Model for alpha parameter (site+treatment)----
-test_alpha = lm((alpha) ~ (RainTrt + Site),data = manzoni.data.soil.1)
-
-# QQ-Plot
-par(mfrow = c(1, 2)) # combine plots
-# 1. Homogeneity of variances
-plot(test_alpha, which = 3)
-# 2. Normality
-plot(test_alpha, which = 2)
-par(mfrow = c(1, 1))
-
-summary(test_alpha)
+# Exploration plots
 
 # Plots
-ggplot(manzoni.data.soil.1) +
-  aes(x = RainTrt, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + facet_wrap(vars(Site)) + labs(color = "Performance") + 
-  scale_x_discrete(name ="Rain Treatment") + theme(text = element_text(size=20))
+ph_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.pH, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="pH") + theme(text = element_text(size=20))
 
-ggplot(manzoni.data.soil.1) +
-  aes(x = RainTrt, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + facet_wrap(vars(sort(unlist(USDA_class)))) + labs(color = "Performance") + 
-  scale_x_discrete(name ="Rain Treatment") + theme(text = element_text(size=20))
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/ph_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(ph_figure)
+dev.off()
+
+MAP_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.MAP, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Mean Precipitation") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/MAP_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(MAP_figure)
+dev.off()
+
+MAT_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.MAT, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Mean Temperature") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/MAT_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(MAT_figure)
+dev.off()
+
+sand_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean_sand, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Sand (%)") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/sand_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(sand_figure)
+dev.off()
+
+clay_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean_clay, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Clay (%)") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/clay_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(clay_figure)
+dev.off()
+
+DOC_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.DOC, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="DOC") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/DOC_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(DOC_figure)
+dev.off()
+
