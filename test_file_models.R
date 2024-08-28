@@ -83,3 +83,67 @@ ggplot(manzoni.data.soil.1) +
   aes(x = RainTrt, y = alpha, color = as.factor(performance)) +
   geom_point(size = 3) + facet_wrap(vars(sort(unlist(USDA_class)))) + labs(color = "Performance") + 
   scale_x_discrete(name ="Rain Treatment") + theme(text = element_text(size=20))
+
+# Exploration plots
+
+# Plots
+ph_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.pH, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="pH") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/ph_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(ph_figure)
+dev.off()
+
+MAP_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.MAP, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Mean Precipitation") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/MAP_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(MAP_figure)
+dev.off()
+
+MAT_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.MAT, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Mean Temperature") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/MAT_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(MAT_figure)
+dev.off()
+
+sand_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean_sand, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Sand (%)") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/sand_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(sand_figure)
+dev.off()
+
+clay_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean_clay, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="Clay (%)") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/clay_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(clay_figure)
+dev.off()
+
+DOC_figure = ggplot(manzoni.data.soil) +
+  aes(x = mean.DOC, y = alpha, color = as.factor(performance)) +
+  geom_point(size = 3) + labs(color = "Performance") + 
+  scale_x_discrete(name ="DOC") + theme(text = element_text(size=20))
+
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/DOC_figure.png",
+    width=3500*1.35,height=1969*1.35,res=300)
+print(DOC_figure)
+dev.off()
+

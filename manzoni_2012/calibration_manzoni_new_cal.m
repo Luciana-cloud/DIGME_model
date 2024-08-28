@@ -1,9 +1,9 @@
-function [SSE] = calibration_manzoni(p)
+function [SSE] = calibration_manzoni_new_cal(p)
 
 % Calling data
 % 
 data        = load("data_manzoni_matlab.txt");
-%% 
+
 % x           = data(1:18,3); % Ayora.ES - Ambient
 % x           = data(19:36,3); % Ayora.ES - Drought
 % x           = data(37:60,3); % GIG - Ambient
@@ -44,8 +44,8 @@ data        = load("data_manzoni_matlab.txt");
 % x           = data(810:827,3); % nyngan.au - Drought
 % x           = data(828:851,3); % passogavia.it - Ambient
 % x           = data(852:875,3); % passogavia.it - Drought
-% x           = data(876:890,3); % riomayo.ar - Ambient
-% x           = data(891:907,3); % riomayo.ar - Drought
+% x           = cat(1,data(876:884,3),data(886:890,3)); % riomayo.ar - Ambient
+% x           = cat(1,data(891:899,3),data(901:907,3)); % riomayo.ar - Drought
 % x           = data(908:937,3); % scruzl.us - Ambient
 % x           = data(938:967,3); % scruzl.us - Drought
 % x           = data(968:990,3); % sgsdrt.us - Ambient
@@ -57,9 +57,41 @@ data        = load("data_manzoni_matlab.txt");
 % x           = data(1087:1104,3); % wayqe.re - Ambient
 x           = data(1105:1122,3); % wayqe.re - Drought
 
+%% Field Capacity
+
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\Ayora.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\GIG.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\P12.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\P13.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\PNE_unburned.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\Purdue.us.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\Sev.mix.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\baddrt.de.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\brhill.au.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\brookdale.ca.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\cedarsav.us.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\cobar.au.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\cowidrt.ca.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\dona.ana.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\hoide.de.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\horacg.cr.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\hyide.de.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\lygra.no.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\nyngan.au.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\passogavia.it.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\riomayo.ar.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\scruzl.us.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\sgsdrt.us.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\skotsvar.no.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\ukulingadrt.za.mat');
+a = load('C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\water_potential_fitting\calibrated_parameters\wayqe.re.mat'); 
+
+q(1) = 1/a.p(2);
+
 %%
 % Calling model
-SR_sim      = manzoni_model(x,p);
+SR_sim      = manzoni_model_new(x,p,q);
+
 % max_f       = max(data(1:18,4)); % Ayora.ES - Ambient - maximum respiration
 % max_f       = max(data(19:36,4)); % Ayora.ES - Drought - maximum respiration
 % max_f       = max(data(37:60,4)); % GIG - Ambient - maximum respiration
@@ -72,7 +104,7 @@ SR_sim      = manzoni_model(x,p);
 % max_f       = max(data(199:216,4)); % PNE_unburned - Drought - maximum respiration
 % max_f       = max(data(217:240,4)); % Purdue.us - Ambient - maximum respiration
 % max_f       = max(data(241:264,4)); % Purdue.us - Drought - maximum respiration
-% max_f       = max(data(265:294,4)); % Sev.mix - Drought - maximum respiration
+% max_f       = max(data(265:294,4)); % Sev.mix - Ambient - maximum respiration
 % max_f       = max(data(295:324,4)); % Sev.mix - Drought - maximum respiration
 % max_f       = max(data(325:354,4)); % baddrt.de - Ambient - maximum respiration
 % max_f       = max(data(355:383,4)); % baddrt.de - Drought - maximum respiration
@@ -100,8 +132,8 @@ SR_sim      = manzoni_model(x,p);
 % max_f       = max(data(810:827,4)); % nyngan.au - Drought - maximum respiration
 % max_f       = max(data(828:851,4)); % passogavia.it - Ambient - maximum respiration
 % max_f       = max(data(852:875,4)); % passogavia.it - Drought - maximum respiration
-% max_f       = max(data(876:890,4)); % riomayo.ar - Ambient - maximum respiration
-% max_f       = max(data(891:907,4)); % riomayo.ar - Drought - maximum respiration
+% max_f       = max(cat(1,data(876:884,4),data(886:890,4))); % riomayo.ar - Ambient - maximum respiration
+% max_f       = max(cat(1,data(891:899,4),data(901:907,4))); % riomayo.ar - Drought - maximum respiration
 % max_f       = max(data(908:937,4)); % scruzl.us - Ambient - maximum respiration
 % max_f       = max(data(938:967,4)); % scruzl.us - Drought - maximum respiration
 % max_f       = max(data(968:990,4)); % sgsdrt.us - Ambient - maximum respiration
@@ -154,8 +186,8 @@ max_f       = max(data(1105:1122,4)); % wayqe.re - Drought - maximum respiration
 % SR_obs      = data(810:827,4)/max_f; % nyngan.au - Drought
 % SR_obs      = data(828:851,4)/max_f; % passogavia.it - Ambient
 % SR_obs      = data(852:875,4)/max_f; % passogavia.it - Drought
-% SR_obs      = data(876:890,4)/max_f; % riomayo.ar - Ambient
-% SR_obs      = data(891:907,4)/max_f; % riomayo.ar - Drought
+% SR_obs      = cat(1,data(876:884,4),data(886:890,4))/max_f; % riomayo.ar - Ambient
+% SR_obs      = cat(1,data(891:899,4),data(901:907,4))/max_f; % riomayo.ar - Drought
 % SR_obs      = data(908:937,4)/max_f; % scruzl.us - Ambient
 % SR_obs      = data(938:967,4)/max_f; % scruzl.us - Drought
 % SR_obs      = data(968:990,4)/max_f; % sgsdrt.us - Ambient
@@ -208,8 +240,8 @@ SR_obs      = data(1105:1122,4)/max_f; % wayqe.re - Drought
 % SR_sd      = data(810:827,5)/max_f; % nyngan.au - Drought
 % SR_sd      = data(828:851,5)/max_f; % passogavia.it - Ambient
 % SR_sd      = data(852:875,5)/max_f; % passogavia.it - Drought
-% SR_sd      = data(876:890,5)/max_f; % riomayo.ar - Ambient
-% SR_sd      = data(891:907,5)/max_f; % riomayo.ar - Drought
+% SR_sd      = cat(1,data(876:884,5),data(886:890,5))/max_f; % riomayo.ar - Ambient
+% SR_sd      = cat(1,data(891:899,5),data(901:907,5))/max_f; % riomayo.ar - Drought
 % SR_sd      = data(908:937,5)/max_f; % scruzl.us - Ambient
 % SR_sd      = data(938:967,5)/max_f; % scruzl.us - Drought
 % SR_sd      = data(968:990,5)/max_f; % sgsdrt.us - Ambient
@@ -221,6 +253,7 @@ SR_obs      = data(1105:1122,4)/max_f; % wayqe.re - Drought
 % SR_sd      = data(1087:1104,5)/max_f; % wayqe.re - Ambient
 SR_sd      = data(1105:1122,5)/max_f; % wayqe.re - Drought
 
+%%
 % Objective function - residual sum of squares
 SSE_1       = sum(((log(SR_obs) - log(SR_sim)).^2)./(log(SR_sd)).^2);
 % SSE         = SSE_1^0.5
@@ -230,7 +263,7 @@ SSE         = SSE_1
 plot(log10(x),SR_sim,"*");
 hold on
 plot(log10(x),SR_obs,"o");
-xline(log10(p(3)),'-r');
+xline(log10(q(1)),'-r');
 xline(p(1),'-b');
 
 % fig = figure;

@@ -3,6 +3,7 @@
 %% Calling Data
 
 Data    = load("WP_matlab.txt");
+Data_2  = load("WP_matlab_2.txt");
 p_final = zeros(26,5);
 x       = Data(1:6,4); % WP [bar]
 
@@ -362,13 +363,14 @@ p(5) = mdl.Rsquared.Adjusted;
 p_final(16,:) = p;
 
 load('hyide.de.mat')
+p(3)   = Data_2(97,5); % hyide.de Saturated soil moisture content [-]*
 p(4)   = 0; % Residual soil water content [-]*
 WP_obs      = (Data(97:102,4));  
-WC_obs      = Data(97:102,2)/0.059576337;
+WC_obs      = Data(97:102,2)/0.571734613;
 WC_sd       = Data(97:102,3);
 WP_sim      = (linspace(0.1,15,3300));
-WC_sim      = van_genuchten(WP_sim,p)/0.059576337;
-WC_sim1     = van_genuchten(x,p)/0.059576337;
+WC_sim      = van_genuchten(WP_sim,p)/0.571734613;
+WC_sim1     = van_genuchten(x,p)/0.571734613;
 % fig = figure;
 subplot(3,4,5);
 plot(WC_sim,log10(WP_sim*1000))
@@ -377,7 +379,7 @@ plot(WC_obs,log10(WP_obs*1000),"*")
 title('hyide.de**')
 xlabel('Relative Saturation [-]')
 ylabel('Water Potential [pF]')
-xlim([1 4])
+xlim([0 1])
 mdl  = fitlm(WC_obs,WC_sim1);
 p(5) = mdl.Rsquared.Adjusted;
 p_final(17,:) = p;
@@ -426,13 +428,14 @@ p(5) = mdl.Rsquared.Adjusted;
 p_final(19,:) = p;
 
 load('passogavia.it.mat')
+p(3)   = Data_2(115,5); % passogavia Saturated soil moisture content [-]*
 p(4)   = 0; % Residual soil water content [-]*
 WP_obs      = (Data(115:120,4));  
-WC_obs      = Data(115:120,2);
+WC_obs      = Data(115:120,2)/0.781956695;
 WC_sd       = Data(115:120,3);
 WP_sim      = (linspace(0.1,15,3300));
-WC_sim      = van_genuchten(WP_sim,p);
-WC_sim1     = van_genuchten(x,p);
+WC_sim      = van_genuchten(WP_sim,p)/0.781956695;
+WC_sim1     = van_genuchten(x,p)/0.781956695;
 % fig = figure;
 subplot(3,4,8);
 plot(WC_sim,log10(WP_sim*1000))
@@ -512,14 +515,15 @@ p(5) = mdl.Rsquared.Adjusted;
 p_final(23,:) = p;
 
 load('skotsvar.no.mat')
+p(3)   = Data_2(139,5); % skotsvar Saturated soil moisture content [-]*
 p(4)   = 0; % Residual soil water content [-]*
 WP_obs      = (Data(139:142,4));  
-WC_obs      = Data(139:142,2)/0.079998572;
+WC_obs      = Data(139:142,2)/0.899042862;
 WC_sd       = Data(139:142,3);
 WP_sim      = (linspace(0.1,15,3300));
-WC_sim      = van_genuchten(WP_sim,p)/0.079998572;
+WC_sim      = van_genuchten(WP_sim,p)/0.899042862;
 x1          = Data(1:4,4); % WP [bar]
-WC_sim1     = van_genuchten(x1,p)/0.079998572;
+WC_sim1     = van_genuchten(x1,p)/0.899042862;
 % fig = figure;
 subplot(3,4,12);
 plot(WC_sim,log10(WP_sim*1000))
@@ -528,7 +532,7 @@ plot(WC_obs,log10(WP_obs*1000),"*")
 title('skotsvar.no**')
 xlabel('Relative Saturation [-]')
 ylabel('Water Potential [pF]')
-% xlim([0 1])
+xlim([0 1])
 mdl  = fitlm(WC_obs,WC_sim1);
 p(5) = mdl.Rsquared.Adjusted;
 p_final(24,:) = p;
@@ -763,14 +767,15 @@ p(5) = mdl.Rsquared.Adjusted;
 %% Organic
 
 load('skotsvar.no.mat')
+p(3)   = Data_2(139,5); % skotsvar Saturated soil moisture content [-]*
 p(4)   = 0; % Residual soil water content [-]*
 WP_obs      = (Data(139:142,4));  
-WC_obs      = Data(139:142,2)/0.079998572;
+WC_obs      = Data(139:142,2)/0.899042862;
 WC_sd       = Data(139:142,3);
 WP_sim      = (linspace(0.1,15,3300));
-WC_sim      = van_genuchten(WP_sim,p)/0.079998572;
+WC_sim      = van_genuchten(WP_sim,p)/0.899042862;
 x1          = Data(1:4,4); % WP [bar]
-WC_sim1     = van_genuchten(x1,p)/0.079998572;
+WC_sim1     = van_genuchten(x1,p)/0.899042862;
 fig = figure;
 subplot(1,2,1);
 plot(WC_sim,log10(WP_sim*1000))
@@ -779,9 +784,10 @@ plot(WC_obs,log10(WP_obs*1000),"*")
 title('skotsvar.no**')
 xlabel('Relative Saturation [-]')
 ylabel('Water Potential [pF]')
-% xlim([0 1])
+xlim([0 1])
 mdl  = fitlm(WC_obs,WC_sim1);
 p(5) = mdl.Rsquared.Adjusted;
+
 
 load('wayqe.re.mat')
 p(3)   = Data(151,5); % wayqe.re Saturated soil moisture content [-]*
@@ -871,13 +877,14 @@ mdl  = fitlm(WC_obs,WC_sim1);
 p(5) = mdl.Rsquared.Adjusted;
 
 load('hyide.de.mat')
+p(3)   = Data_2(97,5); % hyide.de Saturated soil moisture content [-]*
 p(4)   = 0; % Residual soil water content [-]*
 WP_obs      = (Data(97:102,4));  
-WC_obs      = Data(97:102,2)/0.059576337;
+WC_obs      = Data(97:102,2)/0.571734613;
 WC_sd       = Data(97:102,3);
 WP_sim      = (linspace(0.1,15,3300));
-WC_sim      = van_genuchten(WP_sim,p)/0.059576337;
-WC_sim1     = van_genuchten(x,p)/0.059576337;
+WC_sim      = van_genuchten(WP_sim,p)/0.571734613;
+WC_sim1     = van_genuchten(x,p)/0.571734613;
 % fig = figure;
 subplot(2,3,4);
 plot(WC_sim,log10(WP_sim*1000))
@@ -886,7 +893,7 @@ plot(WC_obs,log10(WP_obs*1000),"*")
 title('hyide.de**')
 xlabel('Relative Saturation [-]')
 ylabel('Water Potential [pF]')
-xlim([1 4])
+xlim([0 1])
 mdl  = fitlm(WC_obs,WC_sim1);
 p(5) = mdl.Rsquared.Adjusted;
 
@@ -1064,13 +1071,14 @@ mdl  = fitlm(WC_obs,WC_sim1);
 p(5) = mdl.Rsquared.Adjusted;
 
 load('passogavia.it.mat')
+p(3)   = Data_2(115,5); % passogavia Saturated soil moisture content [-]*
 p(4)   = 0; % Residual soil water content [-]*
 WP_obs      = (Data(115:120,4));  
-WC_obs      = Data(115:120,2);
+WC_obs      = Data(115:120,2)/0.781956695;
 WC_sd       = Data(115:120,3);
 WP_sim      = (linspace(0.1,15,3300));
-WC_sim      = van_genuchten(WP_sim,p);
-WC_sim1     = van_genuchten(x,p);
+WC_sim      = van_genuchten(WP_sim,p)/0.781956695;
+WC_sim1     = van_genuchten(x,p)/0.781956695;
 % fig = figure;
 subplot(2,3,5);
 plot(WC_sim,log10(WP_sim*1000))
