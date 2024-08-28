@@ -10,6 +10,8 @@ library("stringr")
 library(domir)
 library(car)
 library(matrixStats)
+library(stats)
+library(factoextra)
 
 # Input data----
 # Physicochemical description
@@ -82,6 +84,20 @@ new_data = as.data.frame(cbind(data_BD.final$SiteCode,data_BD.final$mean,data_PD
 colnames(new_data) = c("Site","BD","PD")
 new_data = new_data %>% mutate(Porosity = 1 - (as.numeric(unlist(BD))/as.numeric(unlist(PD))))   
 write.csv(new_data, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_physicochemical_clean.csv")
+# For three sites, we did not have good estimations of soil porosity, so 
+# we will use the specific gravity of the soil as a proxy for particle density
+DIGME_physicochemical_clean   = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_physicochemical_clean.csv",dec=".")
+specific_gravity              = 2.65
+DIGME_physicochemical_clean$PD[DIGME_physicochemical_clean$Site == "passogavia.it"] = specific_gravity
+DIGME_physicochemical_clean$PD[DIGME_physicochemical_clean$Site == "hyide.de"]      = specific_gravity
+DIGME_physicochemical_clean$PD[DIGME_physicochemical_clean$Site == "skotsvar.no"]   = specific_gravity
+DIGME_physicochemical_clean = DIGME_physicochemical_clean %>% mutate(Porosity = 1 - (as.numeric(unlist(BD))/as.numeric(unlist(PD))))   
+write.csv(DIGME_physicochemical_clean, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_physicochemical_clean.csv")
+
+# Writing in google drive
+sheet_write(DIGME_physicochemical_clean,
+            ss = "https://docs.google.com/spreadsheets/d/11DytAR1jPBdgWUM1dio7QVX23OAK_BfH63e4ssTqOa8/edit?gid=0#gid=0",
+            sheet = "DIGME_physicochemical")
 
 # Convert GWC to VWC----
 # VWC = GWC * BD
@@ -153,11 +169,21 @@ WP_matlab$WVC_sd[is.na(WP_matlab$WVC_sd)] = "NaN"
 write.table(WP_matlab, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/WP_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
 
+# Add the new calculated porosities to the WP matlab file
+WP_matlab = read.delim("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/WP_matlab.txt")
+WP_matlab$X0.504982106757517[96:101]  = DIGME_physicochemical_clean$Porosity[DIGME_physicochemical_clean$Site=="hyide.de"]
+WP_matlab$X0.504982106757517[114:119] = DIGME_physicochemical_clean$Porosity[DIGME_physicochemical_clean$Site=="passogavia.it"]
+WP_matlab$X0.504982106757517[138:143] = DIGME_physicochemical_clean$Porosity[DIGME_physicochemical_clean$Site=="skotsvar.no"]
+WP_matlab[WP_matlab=="NaN"] = "NaN"
+WP_matlab                   =  WP_matlab[, -1]
+write.table(WP_matlab, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/WP_matlab_2.txt", sep = "\t",
+            row.names = TRUE, col.names = FALSE,quote = FALSE)
+
 # Water Potential Curves - Plotting and conversion ----
 
 # Data preparation
-Site             = unique(data_BD$SiteCode)
-parameters_VG    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/water_potential_fitting/calibrated_parameters/parameters_VG.csv",dec=".")
+Site             = unique(DIGME_physicochemical_clean$Site)
+parameters_VG    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_VG.csv",dec=".")
 parameters_VG    = as.data.frame(cbind(Site,parameters_VG))
 write.csv(parameters_VG, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_VG.csv")
 # Writing in google drive
@@ -181,6 +207,9 @@ for(i in a){
   temp.3 = temp.2 %>% mutate(ActualWP = temp.2$alpha_1*((1/(temp.2$theta)^temp.2$m_1)-1)^temp.2$n_1) 
   DIGME_data_global.1 = rbind(DIGME_data_global.1, temp.3) 
 }
+# Omit NAs
+DIGME_data_global.1 = DIGME_data_global.1 %>% drop_na(ActualWP)
+DIGME_data_global.1 = DIGME_data_global.1 %>% drop_na(CO2_eq)
 
 write.csv(DIGME_data_global.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_data_global.csv")
 # Writing in google drive
@@ -275,16 +304,30 @@ rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_
 # Manzoni Model Results - Plotting and conversion ----
 
 # Data preparation
-Site                  = unique(DIGME_data_global.1$SiteCode)
+Site                  = unique(DIGME_data_global$SiteCode)
 Site                  = rep(Site,each = 2)
 RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
-parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/manzoni_2012/parameters_manzoni.csv",dec=".")
+parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni.csv",dec=".")
 parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
 write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni.csv")
 # Writing in google drive
 sheet_write(parameters_manzoni,
             ss = "https://docs.google.com/spreadsheets/d/1a77xdxHZ6yH4D0j0ATR1gzKu2CNQoq5-5W0PJkTnjUs/edit?gid=0#gid=0",
             sheet = "parameters_manzoni")
+
+# Manzoni Model Results using 1/alpha as field capacity - Plotting and conversion ----
+
+# Data preparation
+Site                  = unique(DIGME_data_global$SiteCode)
+Site                  = rep(Site,each = 2)
+RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
+parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_new.csv",dec=".")
+parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
+write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_new.csv")
+# Writing in google drive
+sheet_write(parameters_manzoni,
+            ss = "https://docs.google.com/spreadsheets/d/1TOcf6h7epS19-OK4vtYY7LimcjH-2kqhGbt0xRy_Dfo/edit?gid=0#gid=0",
+            sheet = "parameters_mazoni_alpha_fc")
 
 # Water Potential conversion for new experiment----
 
@@ -357,72 +400,58 @@ DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>%
             mean_clay   = mean(as.numeric(unlist(Clay)),na.rm = TRUE))
 
 # Join both datasets
+names(DIGME.global.soil)[names(DIGME.global.soil) == 'SiteCode'] <- 'Site'
 manzoni.data.soil = left_join(manzoni.data,DIGME.global.soil, by=c('Site',"RainTrt"))
 # Writing in google drive
 sheet_write(manzoni.data.soil,
             ss = "https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0",
             sheet = "manzoni.data.soil")
+# PCR ----
+manzoni.data.soil = read_sheet("https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0")
+pca_model = prcomp(manzoni.data.soil[c("mean.DOC","mean.pH","mean.MBC","mean.MAP","mean.MAT")],
+                center = TRUE,
+                scale. = TRUE)
+print(pca_model)
+summary(pca_model)
 
-# Exploration plots
-
-# Plots
-ph_figure = ggplot(manzoni.data.soil) +
-  aes(x = mean.pH, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + labs(color = "Performance") + 
-  scale_x_discrete(name ="pH") + theme(text = element_text(size=20))
-
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/ph_figure.png",
+biplot_1 = fviz_pca_biplot(pca_model,label="none",habillage=manzoni.data.soil$RainTrt) + 
+  theme_minimal()
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/biplot_1.png",
     width=3500*1.35,height=1969*1.35,res=300)
-print(ph_figure)
+print(biplot_1)
 dev.off()
 
-MAP_figure = ggplot(manzoni.data.soil) +
-  aes(x = mean.MAP, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + labs(color = "Performance") + 
-  scale_x_discrete(name ="Mean Precipitation") + theme(text = element_text(size=20))
-
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/MAP_figure.png",
+biplot_2 = fviz_pca_biplot(pca_model, label ="var") + theme_minimal()
+png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/biplot_2.png",
     width=3500*1.35,height=1969*1.35,res=300)
-print(MAP_figure)
+print(biplot_2)
 dev.off()
 
-MAT_figure = ggplot(manzoni.data.soil) +
-  aes(x = mean.MAT, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + labs(color = "Performance") + 
-  scale_x_discrete(name ="Mean Temperature") + theme(text = element_text(size=20))
+# Alpha Model ----
 
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/MAT_figure.png",
-    width=3500*1.35,height=1969*1.35,res=300)
-print(MAT_figure)
-dev.off()
+# Get Delta Alpha
+del_alpha = c()
+site_n    = unique(manzoni.data.soil$Site)
+for(i in site_n){
+  b.1  = manzoni.data.soil %>% filter(Site == i & RainTrt == "Ambient")
+  b.2  = manzoni.data.soil %>% filter(Site == i & RainTrt == "Drought")
+  temp = b.1$alpha - b.2$alpha 
+  del_alpha = as.data.frame(rbind(del_alpha,cbind(temp,b.1$mean.MAP,b.1$mean.MAT,
+                                                  mean(b.1$mean.pH,b.2$mean.pH)))) 
+}
+colnames(del_alpha) = c("delta_alpha","MAP","MAT","pH")
 
-sand_figure = ggplot(manzoni.data.soil) +
-  aes(x = mean_sand, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + labs(color = "Performance") + 
-  scale_x_discrete(name ="Sand (%)") + theme(text = element_text(size=20))
+model.1 = lm(delta_alpha ~ MAP*MAT*pH,data = del_alpha)
+summary(model.1)
 
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/sand_figure.png",
-    width=3500*1.35,height=1969*1.35,res=300)
-print(sand_figure)
-dev.off()
+model.2 = lm(delta_alpha ~ MAP*pH,data = del_alpha)
+summary(model.2)
 
-clay_figure = ggplot(manzoni.data.soil) +
-  aes(x = mean_clay, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + labs(color = "Performance") + 
-  scale_x_discrete(name ="Clay (%)") + theme(text = element_text(size=20))
+model.3 = lm(delta_alpha ~ MAT*pH,data = del_alpha)
+summary(model.3)
 
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/clay_figure.png",
-    width=3500*1.35,height=1969*1.35,res=300)
-print(clay_figure)
-dev.off()
+model.4 = lm(delta_alpha ~ MAP*MAT,data = del_alpha)
+summary(model.4)
 
-DOC_figure = ggplot(manzoni.data.soil) +
-  aes(x = mean.DOC, y = alpha, color = as.factor(performance)) +
-  geom_point(size = 3) + labs(color = "Performance") + 
-  scale_x_discrete(name ="DOC") + theme(text = element_text(size=20))
-
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/DOC_figure.png",
-    width=3500*1.35,height=1969*1.35,res=300)
-print(DOC_figure)
-dev.off()
+AIC(model.1,model.2,model.3,model.4) # model.2
 
