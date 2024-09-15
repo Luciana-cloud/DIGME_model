@@ -25,35 +25,35 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 [p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
 
 %%
-save('Ayora.mat','p')
-save('GIG.mat','p')
-save('P12.mat','p')
-save('P13.mat','p')
-save('PNE_unburned.mat','p')
-save('Purdue.us.mat','p')
-save('Sev.mix.mat','p')
-save('baddrt.de.mat','p')
-save('brhill.au.mat','p')
-save('brookdale.ca.mat','p')
-save('cobar.au.mat','p')
-save('cowidrt.ca.mat','p')
-save('dona.ana.mat','p')
-save('hoide.de.mat','p')
-save('horacg.cr.mat','p')
-save('nyngan.au.mat','p')
-save('riomayo.ar.mat','p')
-save('scruzl.us.mat','p')
-save('sgsdrt.us.mat','p')
-save('ukulingadrt.za.mat','p')
-save('wayqe.re.mat','p')
-save('cedarsav.us.mat','p')
-save('hyide.de.mat','p')
-save('lygra.no.mat','p')
-save('passogavia.it.mat','p')
-save('skotsvar.no.mat','p')
+% save('Ayora.mat','p')
+% save('GIG.mat','p')
+% save('P12.mat','p')
+% save('P13.mat','p')
+% save('PNE_unburned.mat','p')
+% save('Purdue.us.mat','p')
+% save('Sev.mix.mat','p')
+% save('baddrt.de.mat','p')
+% save('brhill.au.mat','p')
+% save('brookdale.ca.mat','p')
+% save('cobar.au.mat','p')
+% save('cowidrt.ca.mat','p')
+% save('dona.ana.mat','p')
+% save('hoide.de.mat','p')
+% save('horacg.cr.mat','p')
+% save('nyngan.au.mat','p')
+% save('riomayo.ar.mat','p')
+% save('scruzl.us.mat','p')
+% save('sgsdrt.us.mat','p')
+% save('ukulingadrt.za.mat','p')
+% save('wayqe.re.mat','p')
+% save('cedarsav.us.mat','p')
+% save('hyide.de.mat','p')
+% save('lygra.no.mat','p')
+% save('passogavia.it.mat','p')
+% save('skotsvar.no.mat','p')
 
 %%
-p = [1.3 1 0.0101]; % 0.0101; 0.00101; 0.000101
+p = [3.01 1 0.0101]; % 0.0101; 0.00101; 0.000101
 %%
 ObjectiveFunction = @calibration_manzoni;
 
@@ -62,8 +62,8 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [1.5 1e2 0.8]; % 1e2
-lb = [-1 1e-2 0.5]; % 0.01; 0.001; 0.00001 
+ub = [3.1 1e2 1]; % 1e2
+lb = [-1 1e-2 0.01]; % 0.01; 0.001; 0.00001 
 
 p0 = p;
 
@@ -202,3 +202,55 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 % save('ukulingadrt.za_drought_new.mat','p')
 % save('wayqe.re_ambient_new.mat','p')
 % save('wayqe.re_drought_new.mat','p')
+
+%% 
+
+p = [1.5 1];
+
+%%
+
+ObjectiveFunction = @calibration_bc;
+
+A = [];
+b = [];
+Aeq = [];
+beq = [];
+
+ub = [1e2 1e4];  
+lb = [1e-2 1e-2];
+
+p0 = p;
+
+nonlcon = [];
+options = optimoptions(@fmincon,'MaxFunEvals',100000);
+
+[p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%%
+
+% save('Ayora_bc.mat','p')
+% save('GIG_bc.mat','p')
+% save('P12_bc.mat','p')
+% save('P13_bc.mat','p')
+% save('PNE_unburned_bc.mat','p')
+% save('Purdue.us_bc.mat','p')
+% save('Sev.mix_bc.mat','p')
+% save('baddrt.de_bc.mat','p')
+% save('brhill.au_bc.mat','p')
+% save('brookdale.ca_bc.mat','p')
+% save('cobar.au_bc.mat','p')
+% save('cowidrt.ca_bc.mat','p')
+% save('dona.ana_bc.mat','p')
+% save('hoide.de_bc.mat','p')
+% save('horacg.cr_bc.mat','p')
+% save('nyngan.au_bc.mat','p')
+% save('riomayo.ar_bc.mat','p')
+% save('scruzl.us_bc.mat','p')
+% save('sgsdrt.us_bc.mat','p')
+% save('ukulingadrt.za_bc.mat','p')
+% save('wayqe.re_bc.mat','p')
+% save('cedarsav.us_bc.mat','p')
+% save('hyide.de_bc.mat','p')
+% save('lygra.no_bc.mat','p')
+% save('passogavia.it_bc.mat','p')
+% save('skotsvar.no_bc.mat','p')

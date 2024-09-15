@@ -1,4 +1,4 @@
-function [SSE] = calibration_vg(p)
+function [SSE] = calibration_bc(p)
 
 % Calling Data
 
@@ -35,63 +35,37 @@ Data1 = load("WP_matlab_2.txt");
 % Constants
 
 % q(1)   = Data(1,5); % Ayora Saturated soil moisture content [-]*
-% q(2)   = Data(6,2); % Ayora Residual soil water content [-]
 % q(1)   = Data(7,5); % GIG Saturated soil moisture content [-]*
-% q(2)   = Data(12,2); % GIG Residual soil water content [-]
 % q(1)   = Data(13,5); % P12 Saturated soil moisture content [-]*
-% q(2)   = Data(18,2); % P12 Residual soil water content [-]
 % q(1)   = Data(19,5); % P13 Saturated soil moisture content [-]*
-% q(2)   = Data(24,2); % P13 Residual soil water content [-]
 % q(1)   = Data(25,5); % PNE_unburned Saturated soil moisture content [-]*
-% q(2)   = Data(30,2); % PNE_unburned Residual soil water content [-]
 % q(1)   = Data(31,5); % Purdue.us Saturated soil moisture content [-]*
-% q(2)   = Data(36,2); % Purdue.us Residual soil water content [-]
 % q(1)   = Data(37,5); % Sev.mix Saturated soil moisture content [-]*
-% q(2)   = Data(42,2); % Sev.mix Residual soil water content [-]
 % q(1)   = Data(43,5); % baddrt.de Saturated soil moisture content [-]*
-% q(2)   = Data(48,2); % baddrt.de Residual soil water content [-]
 % q(1)   = Data(49,5); % brhill.au Saturated soil moisture content [-]*
-% q(2)   = Data(53,2); % brhill.au Residual soil water content [-]
 % q(1)   = Data(55,5); % brookdale.ca Saturated soil moisture content [-]*
-% q(2)   = Data(60,2); % brookdale.ca Residual soil water content [-]
 % q(1)   = Data(61,5); % cedarsav.us Saturated soil moisture content [-]*
-% q(2)   = Data(66,2); % cedarsav.us Residual soil water content [-]
-% q(1)   = Data(67,5); % cobar.au Saturated soil moisture content [-]
-% q(2)   = Data(72,2); % cobar.au Residual soil water content [-]
+% q(1)   = Data(67,5); % cobar.au Saturated soil moisture content [-]*
 % q(1)   = Data(73,5); % cowidrt.ca Saturated soil moisture content [-]*
-% q(2)   = Data(78,2); % cowidrt.ca Residual soil water content [-]
 % q(1)   = Data(79,5); % dona.ana Saturated soil moisture content [-]*
-% q(2)   = Data(84,2); % dona.ana Residual soil water content [-]
 % q(1)   = Data(85,5); % hoide.de Saturated soil moisture content [-]*
-% q(2)   = Data(90,2); % hoide.de Residual soil water content [-]
 % q(1)   = Data(91,5); % horacg.cr Saturated soil moisture content [-]*
-% q(2)   = Data(96,2); % horacg.cr Residual soil water content [-]
 % q(1)   = Data1(97,5); % hyide.de Saturated soil moisture content [-]*
-% q(2)   = Data1(102,2); % hyide.de Residual soil water content [-]
 % q(1)   = Data1(103,5); % lygra.no Saturated soil moisture content [-]*
-% q(2)   = Data(108,2); % lygra.no Residual soil water content [-]
 % q(1)   = Data(109,5); % nyngan.au Saturated soil moisture content [-]*
-% q(2)   = Data(114,2); % nyngan.au Residual soil water content [-]
 % q(1)   = Data1(115,5); % passogavia.it Saturated soil moisture content [-]*
-% q(2)   = Data1(120,2); % passogavia.it Residual soil water content [-]
 % q(1)   = Data(121,5); % riomayo.ar Saturated soil moisture content [-]*
-% q(2)   = Data(126,2); % riomayo.ar Residual soil water content [-]
 % q(1)   = Data(127,5); % scruzl.us Saturated soil moisture content [-]*
-% q(2)   = Data(132,2); % scruzl.us Residual soil water content [-]
 % q(1)   = Data(133,5); % sgsdrt.us Saturated soil moisture content [-]*
-% q(2)   = Data(138,2); % sgsdrt.us Residual soil water content [-]
 % q(1)   = Data1(138,5); % skotsvar.no Saturated soil moisture content [-]*
-% q(2)   = Data1(142,2); % skotsvar.no Residual soil water content [-]
 % q(1)   = Data(145,5); % ukulingadrt.za Saturated soil moisture content [-]*
-% q(2)   = Data(150,2); % ukulingadrt.za Residual soil water content [-]
 % q(1)   = Data(151,5); % wayqe.re Saturated soil moisture content [-]*
-% q(2)   = Data(153,2); % wayqe.re Residual soil water content [-]
 
 q(2)   = 0; % Residual soil water content [-]*
 
 % Simulations
 
-WC_sim      = van_genuchten(x,p,q);
+WC_sim      = Brook_Corey(x,p,q);
 
 % Model Calibration
 

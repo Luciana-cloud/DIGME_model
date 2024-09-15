@@ -1,6 +1,4 @@
-function [theta] = van_genuchten(x,p)
-
-% Variables 
+function [theta] = Brook_Corey(x,p)
 
 psi     = x; % Water pontential [Bar]
 
@@ -16,12 +14,8 @@ theta_r = p(4); % Residual soil water content [%]
 % theta_s = q(1); % Saturated soil moisture content [%]
 % theta_r = q(2); % Residual soil water content [%]
 
-% Functions
-
-m = 1 - 1/n; % Shape parameter
-
 % Gravimetric water content [%]
 
-theta = theta_r + (theta_s - theta_r)./((1 + (alpha.*abs(psi)).^n)).^m;
+theta = theta_r + (theta_s - theta_r)./(alpha.*abs(psi)).^n;
 
 end
