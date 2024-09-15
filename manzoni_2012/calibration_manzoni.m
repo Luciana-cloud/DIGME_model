@@ -39,7 +39,7 @@ data        = load("data_manzoni_matlab.txt");
 % x           = data(721:737,3); % hyide.de - Ambient
 % x           = data(738:755,3); % hyide.de - Drought
 % x           = data(756:773,3); % lygra.no - Ambient
-% x           = data(774:791,3); % lygra.no - Drought
+x           = data(774:791,3); % lygra.no - Drought
 % x           = data(792:809,3); % nyngan.au - Ambient
 % x           = data(810:827,3); % nyngan.au - Drought
 % x           = data(828:851,3); % passogavia.it - Ambient
@@ -55,7 +55,7 @@ data        = load("data_manzoni_matlab.txt");
 % x           = data(1051:1068,3); % ukulingadrt.za - Ambient
 % x           = data(1069:1086,3); % ukulingadrt.za - Drought
 % x           = data(1087:1104,3); % wayqe.re - Ambient
-x           = data(1105:1122,3); % wayqe.re - Drought
+% x           = data(1105:1122,3); % wayqe.re - Drought
 
 %%
 % Calling model
@@ -95,7 +95,7 @@ SR_sim      = manzoni_model(x,p);
 % max_f       = max(data(721:737,4)); % hyide.de - Ambient - maximum respiration
 % max_f       = max(data(738:755,4)); % hyide.de - Drought - maximum respiration
 % max_f       = max(data(756:773,4)); % lygra.no - Ambient - maximum respiration
-% max_f       = max(data(774:791,4)); % lygra.no - Drought - maximum respiration
+max_f       = max(data(774:791,4)); % lygra.no - Drought - maximum respiration
 % max_f       = max(data(792:809,4)); % nyngan.au - Ambient - maximum respiration
 % max_f       = max(data(810:827,4)); % nyngan.au - Drought - maximum respiration
 % max_f       = max(data(828:851,4)); % passogavia.it - Ambient - maximum respiration
@@ -111,7 +111,7 @@ SR_sim      = manzoni_model(x,p);
 % max_f       = max(data(1051:1068,4)); % ukulingadrt.za - Ambient - maximum respiration
 % max_f       = max(data(1069:1086,4)); % ukulingadrt.za - Drought - maximum respiration
 % max_f       = max(data(1087:1104,4)); % wayqe.re - Ambient - maximum respiration
-max_f       = max(data(1105:1122,4)); % wayqe.re - Drought - maximum respiration
+% max_f       = max(data(1105:1122,4)); % wayqe.re - Drought - maximum respiration
 
 % Observations
 % SR_obs      = data(1:18,4)/max_f; % Ayora.ES - Ambient
@@ -149,7 +149,7 @@ max_f       = max(data(1105:1122,4)); % wayqe.re - Drought - maximum respiration
 % SR_obs      = data(721:737,4)/max_f; % hyide.de - Ambient
 % SR_obs      = data(738:755,4)/max_f; % hyide.de - Drought
 % SR_obs      = data(756:773,4)/max_f; % lygra.no - Ambient
-% SR_obs      = data(774:791,4)/max_f; % lygra.no - Drought
+SR_obs      = data(774:791,4)/max_f; % lygra.no - Drought
 % SR_obs      = data(792:809,4)/max_f; % nyngan.au - Ambient
 % SR_obs      = data(810:827,4)/max_f; % nyngan.au - Drought
 % SR_obs      = data(828:851,4)/max_f; % passogavia.it - Ambient
@@ -165,7 +165,7 @@ max_f       = max(data(1105:1122,4)); % wayqe.re - Drought - maximum respiration
 % SR_obs      = data(1051:1068,4)/max_f; % ukulingadrt.za - Ambient
 % SR_obs      = data(1069:1086,4)/max_f; % ukulingadrt.za - Drought
 % SR_obs      = data(1087:1104,4)/max_f; % wayqe.re - Ambient
-SR_obs      = data(1105:1122,4)/max_f; % wayqe.re - Drought
+% SR_obs      = data(1105:1122,4)/max_f; % wayqe.re - Drought
 
 % Standard deviations
 % SR_sd      = data(1:18,5)/max_f; % Ayora.ES - Ambient
@@ -203,7 +203,7 @@ SR_obs      = data(1105:1122,4)/max_f; % wayqe.re - Drought
 % SR_sd      = data(721:737,5)/max_f; % hyide.de - Ambient
 % SR_sd      = data(738:755,5)/max_f; % hyide.de - Drought
 % SR_sd      = data(756:773,5)/max_f; % lygra.no - Ambient
-% SR_sd      = data(774:791,5)/max_f; % lygra.no - Drought
+SR_sd      = data(774:791,5)/max_f; % lygra.no - Drought
 % SR_sd      = data(792:809,5)/max_f; % nyngan.au - Ambient
 % SR_sd      = data(810:827,5)/max_f; % nyngan.au - Drought
 % SR_sd      = data(828:851,5)/max_f; % passogavia.it - Ambient
@@ -219,7 +219,7 @@ SR_obs      = data(1105:1122,4)/max_f; % wayqe.re - Drought
 % SR_sd      = data(1051:1068,5)/max_f; % ukulingadrt.za - Ambient
 % SR_sd      = data(1069:1086,5)/max_f; % ukulingadrt.za - Drought
 % SR_sd      = data(1087:1104,5)/max_f; % wayqe.re - Ambient
-SR_sd      = data(1105:1122,5)/max_f; % wayqe.re - Drought
+% SR_sd      = data(1105:1122,5)/max_f; % wayqe.re - Drought
 
 % Objective function - residual sum of squares
 SSE_1       = sum(((log(SR_obs) - log(SR_sim)).^2)./(log(SR_sd)).^2);
