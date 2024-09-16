@@ -254,3 +254,82 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 % save('lygra.no_bc.mat','p')
 % save('passogavia.it_bc.mat','p')
 % save('skotsvar.no_bc.mat','p')
+
+%%
+log10(max(x))
+min(x)
+
+%%
+p = [3.01 1 0.0101]; % 0.0101; 0.00101; 0.000101
+%%
+ObjectiveFunction = @calibration_manzoni_2;
+
+A = [];
+b = [];
+Aeq = [];
+beq = [];
+
+ub = [3.1 2 1]; % 1e2
+lb = [-1 1e-2 0.01]; % 0.01; 0.001; 0.00001 
+
+p0 = p;
+
+nonlcon = [];
+options = optimoptions(@fmincon,'MaxFunEvals',100000);
+
+[p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
+
+%%
+
+% save('Ayora_ambient_BC.mat','p')
+% save('Ayora_drought_BC.mat','p')
+% save('GIG_ambient_BC.mat','p')
+% save('GIG_drought_BC.mat','p')
+% save('P12_ambient_BC.mat','p')
+% save('P12_drought_BC.mat','p')
+% save('P13_ambient_BC.mat','p')
+% save('P13_drought_BC.mat','p')
+% save('PNE_unburned_ambient_BC.mat','p')
+% save('PNE_unburned_drought_BC.mat','p')
+% save('Purdue.us_ambient_BC.mat','p')
+% save('Purdue.us_drought_BC.mat','p')
+% save('Sev.mix_ambient_BC.mat','p')
+% save('Sev.mix_drought_BC.mat','p')
+% save('baddrt.de_ambient_BC.mat','p')
+% save('baddrt.de_drought_BC.mat','p')
+% save('brhill.au_ambient_BC.mat','p')
+% save('brhill.au_drought_BC.mat','p')
+% save('brookdale.ca_ambient_BC.mat','p')
+% save('brookdale.ca_drought_BC.mat','p')
+% save('cedarsav.us_ambient_BC.mat','p')
+% save('cedarsav.us_drought_BC.mat','p')
+% save('cobar.au_ambient_BC.mat','p')
+% save('cobar.au_drought_BC.mat','p')
+% save('cowidrt.ca_ambient_BC.mat','p')
+% save('cowidrt.ca_drought_BC.mat','p')
+% save('dona.ana_ambient_BC.mat','p')
+% save('dona.ana_drought_BC.mat','p')
+% save('hoide.de_ambient_BC.mat','p')
+% save('hoide.de_drought_BC.mat','p')
+% save('horacg.cr_ambient_BC.mat','p')
+% save('horacg.cr_drought_BC.mat','p')
+% save('hyide.de_ambient_BC.mat','p')
+% save('hyide.de_drought_BC.mat','p')
+% save('lygra.no_ambient_BC.mat','p')
+% save('lygra.no_drought_BC.mat','p')
+% save('nyngan.au_ambient_BC.mat','p')
+% save('nyngan.au_drought_BC.mat','p')
+% save('passogavia.it_ambient_BC.mat','p')
+% save('passogavia.it_drought_BC.mat','p')
+% save('riomayo.ar_ambient_BC.mat','p')
+% save('riomayo.ar_drought_BC.mat','p')
+% save('scruzl.us_ambient_BC.mat','p')
+% save('scruzl.us_drought_BC.mat','p')
+% save('sgsdrt.us_ambient_BC.mat','p')
+% save('sgsdrt.us_drought_BC.mat','p')
+% save('skotsvar.no_ambient_BC.mat','p')
+% save('skotsvar.no_drought_BC.mat','p')
+% save('ukulingadrt.za_ambient_BC.mat','p')
+% save('ukulingadrt.za_drought_BC.mat','p')
+% save('wayqe.re_ambient_BC.mat','p')
+% save('wayqe.re_drought_BC.mat','p')

@@ -422,7 +422,8 @@ rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_
 # Manzoni Model Results - Plotting and conversion using VG and Manzoni model----
 
 # Data preparation
-Site                  = unique(DIGME_data_global$SiteCode)
+DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
+Site                  = unique(DIGME_data_global.1$SiteCode)
 Site                  = rep(Site,each = 2)
 RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
 parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni.csv",dec=".")
@@ -436,7 +437,8 @@ sheet_write(parameters_manzoni,
 # Manzoni Model Results using 1/alpha as field capacity - Plotting and conversion ----
 
 # Data preparation
-Site                  = unique(DIGME_data_global$SiteCode)
+DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
+Site                  = unique(DIGME_data_global.1$SiteCode)
 Site                  = rep(Site,each = 2)
 RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
 parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_new.csv",dec=".")
@@ -446,6 +448,21 @@ write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DI
 sheet_write(parameters_manzoni,
             ss = "https://docs.google.com/spreadsheets/d/1TOcf6h7epS19-OK4vtYY7LimcjH-2kqhGbt0xRy_Dfo/edit?gid=0#gid=0",
             sheet = "parameters_mazoni_alpha_fc")
+
+# Manzoni Model Results - Plotting and conversion using VG and Manzoni model BC-WP----
+
+# Data preparation
+DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
+Site                  = unique(DIGME_data_global.1$SiteCode)
+Site                  = rep(Site,each = 2)
+RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
+parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_BC.csv",dec=".")
+parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
+write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_BC.csv")
+# Writing in google drive
+sheet_write(parameters_manzoni,
+            ss = "https://docs.google.com/spreadsheets/d/1DDwsaQWmRGa-j05NySOPb71zGiyzyAQGMFhUykVCp-0/edit?gid=0#gid=0",
+            sheet = "parameters_manzoni_BC")
 
 # Water Potential conversion for new experiment----
 
@@ -546,7 +563,59 @@ sheet_write(manzoni.data.soil.1,
             ss = "https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0",
             sheet = "manzoni.data.soil")
 
-# PCR ----
+# Test Modeling for Alpha parameter from the Manzoni model with BC WP fits----
+manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1DDwsaQWmRGa-j05NySOPb71zGiyzyAQGMFhUykVCp-0/edit?gid=0#gid=0")
+DIGME.global = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
+
+# Remove sites with a small sample size
+manzoni.data = manzoni.data %>% filter(sample.size > 11)
+manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.05 ~ 0,
+                                                                p.value <  0.05 ~ 1))
+# Soil characteristics
+DIGME.global.soil = DIGME.global %>% select(c("SiteCode","RainTrt","pH","DOC",
+                                              "MBC","SOM","MAP","MAP_CV","MAT",
+                                              "Sand","Clay")) 
+DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>% 
+  summarise(mean.pH     = mean(as.numeric(unlist(pH)),na.rm = TRUE),
+            mean.DOC    = mean(as.numeric(unlist(DOC)),na.rm = TRUE),
+            mean.MBC    = mean(as.numeric(unlist(MBC)),na.rm = TRUE),
+            mean.SOM    = mean(as.numeric(unlist(SOM)),na.rm = TRUE),
+            mean.MAP    = mean(as.numeric(unlist(MAP)),na.rm = TRUE),
+            mean.MAP_CV = mean(as.numeric(unlist(MAP_CV)),na.rm = TRUE),
+            mean.MAT    = mean(as.numeric(unlist(MAT)),na.rm = TRUE),
+            mean_sand   = mean(as.numeric(unlist(Sand)),na.rm = TRUE),
+            mean_clay   = mean(as.numeric(unlist(Clay)),na.rm = TRUE))
+
+# Join both datasets
+names(DIGME.global.soil)[names(DIGME.global.soil) == 'SiteCode'] <- 'Site'
+manzoni.data.soil = left_join(manzoni.data,DIGME.global.soil, by=c('Site',"RainTrt"))
+
+# Writing in google drive
+sheet_write(manzoni.data.soil,
+            ss = "https://docs.google.com/spreadsheets/d/1-EW40Z7Wudv1qQBa4wZFCBu68xonKDBkqokniVwRZTo/edit?gid=0#gid=0",
+            sheet = "manzoni.data.soil_BC")
+# Adding ANPP data
+data                = read_sheet("https://docs.google.com/spreadsheets/d/1TtHcLwdtphcwGAROzgd4F_-L7l6KsohjCAENciR2OrY/edit?gid=863709267#gid=863709267")
+data                = data %>% select(c("SiteCode","RainTrt","ANPP"))
+manzoni.data.soil   = read_sheet("https://docs.google.com/spreadsheets/d/1-EW40Z7Wudv1qQBa4wZFCBu68xonKDBkqokniVwRZTo/edit?gid=0#gid=0")
+Site                = unique(manzoni.data.soil$Site)
+manzoni.data.soil.1 = c()
+for(i in Site){
+  d.1    = manzoni.data.soil %>% filter(Site == i&RainTrt=="Ambient")
+  t.1    = data %>% filter(SiteCode == i&RainTrt=="Ambient")
+  d.1    = d.1 %>% mutate(ANPP = mean(t.1$ANPP))
+  d.2    = manzoni.data.soil %>% filter(Site == i&RainTrt=="Drought")
+  t.2    = data %>% filter(SiteCode == i&RainTrt=="Drought")
+  d.2    = d.2 %>% mutate(ANPP = mean(t.2$ANPP))
+  temp.1 = rbind(d.1,d.2)
+  manzoni.data.soil.1 = rbind(manzoni.data.soil.1, temp.1) 
+}
+# Writing in google drive
+sheet_write(manzoni.data.soil.1,
+            ss = "https://docs.google.com/spreadsheets/d/1-EW40Z7Wudv1qQBa4wZFCBu68xonKDBkqokniVwRZTo/edit?gid=0#gid=0",
+            sheet = "manzoni.data.soil_BC")
+
+# PCR and VG model fit----
 manzoni.data.soil.t = read_sheet("https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0")
 manzoni.data.soil   = manzoni.data.soil.t %>% filter(performance == 1)
 pca_model = prcomp(manzoni.data.soil[c("mean.DOC","mean.pH","mean.MBC","mean.MAP","mean.MAT","ANPP")],
