@@ -233,6 +233,20 @@ sheet_write(DIGME_data_global.1,
 # Manzoni Model - Data preparation----
 # Merge with ANPP
 DIGME_data_global.1 = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
+updated_databse     = read_sheet("https://docs.google.com/spreadsheets/d/1BgfeqJV9OGIczWRoWzy5BkdFc2ieV2wr_OBerlMUoxY/edit?gid=789471970#gid=789471970")
+updated_databse.baddrt =  updated_databse %>% filter(SiteCode == "baddrt.de")
+updated_databse.baddrt =  updated_databse.baddrt[-24,]
+updated_databse.baddrt =  updated_databse.baddrt[,c(2,19:23)]
+updated_databse.Cedar  =  updated_databse %>% filter(SiteCode == "cedarsav.us")
+updated_databse.Cedar  =  updated_databse.Cedar[,c(2,19:23)]
+updated_databse        = as.data.frame(rbind(updated_databse.baddrt,updated_databse.Cedar))
+DIGME_data_global.1    = transform(DIGME_data_global.1, CO2_w1a = as.numeric(CO2_w1a),
+                                   CO2_w1b = as.numeric(CO2_w1b),
+                                   CO2_w2a = as.numeric(CO2_w2a),
+                                   CO2_w2b = as.numeric(CO2_w2b),
+                                   CO2_eq  = as.numeric(CO2_eq))
+DIGME_data_global.1[325:383,c(19:23)] = as.numeric(unlist(updated_databse.baddrt[,2:6]))
+DIGME_data_global.1[456:515,c(19:23)] = as.numeric(unlist(updated_databse.Cedar[,2:6])) 
 
 # Replace all higher WP values by the threshold of 1000 Bars, assuming that we should
 # not have microbial activity below 1000 bars
@@ -267,25 +281,46 @@ for(i in a){
 data_manzoni.2 = data_manzoni.2 %>% mutate(SOC = SOM/1.72)
 # Normalize CO2 flux by SOC
 data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>% 
+  mutate(CO2_w1a_norm = as.numeric(unlist(CO2_w1a))/SOC) %>%
   mutate(CO2_w1b_norm = as.numeric(unlist(CO2_w1b))/SOC) %>% 
   mutate(CO2_w2a_norm = as.numeric(unlist(CO2_w2a))/SOC) %>%
   mutate(CO2_w2b_norm = as.numeric(unlist(CO2_w2b))/SOC)
 
+# Change negative values to NA so we do not consider them for the mean value
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w1a_norm = replace(CO2_w1a_norm, CO2_w1a_norm < 0, NA))
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w1b_norm = replace(CO2_w1b_norm, CO2_w1b_norm < 0, NA))
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w2a_norm = replace(CO2_w2a_norm, CO2_w2a_norm < 0, NA))
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w2b_norm = replace(CO2_w2b_norm, CO2_w2b_norm < 0, NA))
+
 # Obtain standard deviation of CO2 fluxes
-data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni.2[,c(46,47,48)]),
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_eq_norm = rowMeans(as.matrix(data_manzoni.2[,c(47,48,49)]),
+                                                           na.rm = TRUE))
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni.2[,c(47,48,49)]),
                                                        na.rm = TRUE))
+# I am adding the intial repetition as there might not be evidence for birch effect
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_sd.all = rowSds(as.matrix(data_manzoni.2[,c(46,47,48,49)]),
+                                                           na.rm = TRUE))
+data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_mean   = rowMeans(as.matrix(data_manzoni.2[,c(46,47,48,49)]),
+                                                           na.rm = TRUE))
 # Omit NAs
 data_manzoni.2 = data_manzoni.2 %>% drop_na(CO2_w2a_norm)
 
 # 3Sigma rule to check for outliers for the CO2 repetitions----
 # https://www.jstor.org/stable/2684253?seq=1
-data_manzoni.2 = data_manzoni.2 %>% mutate(sigma_rule = CO2_eq_norm + 3*CO2_sd)
+#data_manzoni.2 = data_manzoni.2 %>% mutate(sigma_rule = CO2_eq_norm + 3*CO2_sd)
+data_manzoni.2 = data_manzoni.2 %>% mutate(sigma_rule = CO2_mean + 3*CO2_sd.all)
 data_manzoni.3 = data_manzoni.2 %>% mutate(sigma_result.1 = case_when(CO2_w1b_norm >= sigma_rule ~ 0,
-                                                                    CO2_w1b_norm <  sigma_rule ~ 1))
+                                                                    CO2_w1b_norm <  sigma_rule ~ 1,
+                                                                    CO2_w1b_norm <  0 ~ 0))
 data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.2 = case_when(CO2_w2a_norm >= sigma_rule ~ 0,
-                                                                      CO2_w2a_norm <  sigma_rule ~ 1))
+                                                                      CO2_w2a_norm <  sigma_rule ~ 1,
+                                                                      CO2_w2a_norm <  0 ~ 0))
 data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.3 = case_when(CO2_w2b_norm >= sigma_rule ~ 0,
-                                                                      CO2_w2b_norm <  sigma_rule ~ 1))
+                                                                      CO2_w2b_norm <  sigma_rule ~ 1,
+                                                                      CO2_w2b_norm <  0 ~ 0))
+data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.4 = case_when(CO2_w1a_norm >= sigma_rule ~ 0,
+                                                                      CO2_w1a_norm <  sigma_rule ~ 1,
+                                                                      CO2_w1a_norm <  0 ~ 0))
 # 3Sigma rule to check for outliers for the SOM----
 data_manzoni.4 = c()
 b              = c("Ambient","Drought")
@@ -303,10 +338,10 @@ for(i in a){
 }
 # Erase zeros
 data_manzoni.5 = data_manzoni.4 %>% filter(as.numeric(unlist(sigma_SOM)) > 0)
-write.csv(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni.csv")
+write.csv(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_complete.csv")
 
 # Save for matlab processing
-data_manzoni.5 = data_manzoni.5 %>% select(c("ActualVWC","ActualWP","CO2_eq_norm","CO2_sd"))
+data_manzoni.5 = data_manzoni.5 %>% select(c("ActualVWC","ActualWP","CO2_mean","CO2_sd.all"))
 write.table(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab.txt", sep = "\t",
             row.names = TRUE, col.names = FALSE,quote = FALSE)
 rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_val.d2,b,
