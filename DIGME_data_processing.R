@@ -499,6 +499,21 @@ sheet_write(parameters_manzoni,
             ss = "https://docs.google.com/spreadsheets/d/1DDwsaQWmRGa-j05NySOPb71zGiyzyAQGMFhUykVCp-0/edit?gid=0#gid=0",
             sheet = "parameters_manzoni_BC")
 
+# Manzoni Model Results - Plotting and conversion using VG and Manzoni model 2----
+
+# Data preparation
+DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
+Site                  = unique(DIGME_data_global.1$SiteCode)
+Site                  = rep(Site,each = 2)
+RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
+parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_2.csv",dec=".")
+parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
+write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_BC.csv")
+# Writing in google drive
+sheet_write(parameters_manzoni,
+            ss = "https://docs.google.com/spreadsheets/d/1QcVMBo3HzNwND0A_6tHp09MGVJGq8k1LWY5BOaSHlBM/edit?gid=0#gid=0",
+            sheet = "parameters_manzoni_2")
+
 # Water Potential conversion for new experiment----
 
 # Calling data
@@ -547,13 +562,14 @@ sheet_write(data_GWC_new.1,
             sheet = "DIGME_new_experiment")
 
 # Test Modeling for Alpha parameter from the Manzoni model----
-manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1a77xdxHZ6yH4D0j0ATR1gzKu2CNQoq5-5W0PJkTnjUs/edit?gid=0#gid=0")
+# manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1a77xdxHZ6yH4D0j0ATR1gzKu2CNQoq5-5W0PJkTnjUs/edit?gid=0#gid=0") # old data excluding first observations
+manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1QcVMBo3HzNwND0A_6tHp09MGVJGq8k1LWY5BOaSHlBM/edit?gid=0#gid=0")
 DIGME.global = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
 
 # Remove sites with a small sample size
 manzoni.data = manzoni.data %>% filter(sample.size > 11)
-manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.05 ~ 0,
-                                                                p.value <  0.05 ~ 1))
+manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.1 ~ 0,
+                                                                p.value <  0.1 ~ 1))
 # Soil characteristics
 DIGME.global.soil = DIGME.global %>% select(c("SiteCode","RainTrt","pH","DOC",
                                               "MBC","SOM","MAP","MAP_CV","MAT",
@@ -575,8 +591,8 @@ manzoni.data.soil = left_join(manzoni.data,DIGME.global.soil, by=c('Site',"RainT
 
 # Writing in google drive
 sheet_write(manzoni.data.soil,
-            ss = "https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0",
-            sheet = "manzoni.data.soil")
+            ss = "https://docs.google.com/spreadsheets/d/1gOfam8WkT2pxAorPq5oG4nz1CM4bYLxIMYargXVzTNc/edit?gid=0#gid=0",
+            sheet = "manzoni.data.soil.2")
 # Adding ANPP data
 data                = read_sheet("https://docs.google.com/spreadsheets/d/1TtHcLwdtphcwGAROzgd4F_-L7l6KsohjCAENciR2OrY/edit?gid=863709267#gid=863709267")
 data                = data %>% select(c("SiteCode","RainTrt","ANPP"))
@@ -595,8 +611,8 @@ for(i in Site){
 }
 # Writing in google drive
 sheet_write(manzoni.data.soil.1,
-            ss = "https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0",
-            sheet = "manzoni.data.soil")
+            ss = "https://docs.google.com/spreadsheets/d/1gOfam8WkT2pxAorPq5oG4nz1CM4bYLxIMYargXVzTNc/edit?gid=0#gid=0",
+            sheet = "manzoni.data.soil.2")
 
 # Test Modeling for Alpha parameter from the Manzoni model with BC WP fits----
 manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1DDwsaQWmRGa-j05NySOPb71zGiyzyAQGMFhUykVCp-0/edit?gid=0#gid=0")
