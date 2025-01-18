@@ -2,9 +2,11 @@ function [SSE] = calibration_manzoni(p)
 
 % Calling data
 % 
-data        = load("data_manzoni_matlab.txt");
+% data        = load("data_manzoni_matlab.txt");
+data        = load("china_matlab.txt");
 % data(1110:1127,:);
-%% 
+%% Soil Water Potential
+
 % x           = data(1:18,3); % Ayora.ES - Ambient
 % x           = data(19:36,3); % Ayora.ES - Drought
 % x           = data(37:60,3); % GIG - Ambient
@@ -56,7 +58,17 @@ data        = load("data_manzoni_matlab.txt");
 % x           = data(1056:1073,3); % ukulingadrt.za - Ambient
 % x           = data(1074:1091,3); % ukulingadrt.za - Drought
 % x           = data(1092:1109,3); % wayqe.re - Ambient
-x           = data(1110:1127,3); % wayqe.re - Drought
+% x           = data(1110:1127,3); % wayqe.re - Drought
+% x           = data(1:36,3);     % Urat - Ambient
+% x           = data(37:72,3);    % Urat - Drought
+% x           = data(73:108,3);   % Yanchi - Ambient
+% x           = data(109:144,3);  % Yanchi - Drought
+% x           = data(145:167,3);  % Hongyuan - Ambient
+% x           = data(168:191,3); % Hongyuan - Drought
+% x           = data(192:226,3);  % Hulunber - Ambient
+% x           = data(227:262,3); % Hulunber - Drought
+x           = data(263:296,3);  % Naqui - Ambient
+% x           = data(297:331,3); % Naqui - Drought
 
 %%
 % Calling model
@@ -112,7 +124,17 @@ SR_sim      = manzoni_model(x,p);
 % max_f       = max(data(1056:1073,4)); % ukulingadrt.za - Ambient - maximum respiration
 % max_f       = max(data(1074:1091,4)); % ukulingadrt.za - Drought - maximum respiration
 % max_f       = max(data(1092:1109,4)); % wayqe.re - Ambient - maximum respiration
-max_f       = max(data(1110:1127,4)); % wayqe.re - Drought - maximum respiration
+% max_f       = max(data(1110:1127,4)); % wayqe.re - Drought - maximum respiration
+% max_f           = max(data(1:36,4));     % Urat - Ambient
+% max_f           = max(data(37:72,4));    % Urat - Drought
+% max_f           = max(data(73:108,4));   % Yanchi - Ambient
+% max_f           = max(data(109:144,4));  % Yanchi - Drought
+% max_f           = max(data(145:167,4));  % Hongyuan - Ambient
+% max_f           = max(data(168:191,4)); % Hongyuan - Drought
+% max_f           = max(data(192:226,4));  % Hulunber - Ambient
+% max_f           = max(data(227:262,4)); % Hulunber - Drought
+max_f           = max(data(263:296,4));  % Naqui - Ambient
+% max_f           = max(data(297:331,4)); % Naqui - Drought
 
 % Observations
 % SR_obs      = data(1:18,4)/max_f; % Ayora.ES - Ambient
@@ -166,7 +188,17 @@ max_f       = max(data(1110:1127,4)); % wayqe.re - Drought - maximum respiration
 % SR_obs      = data(1056:1073,4)/max_f; % ukulingadrt.za - Ambient
 % SR_obs      = data(1074:1091,4)/max_f; % ukulingadrt.za - Drought
 % SR_obs      = data(1092:1109,4)/max_f; % wayqe.re - Ambient
-SR_obs      = data(1110:1127,4)/max_f; % wayqe.re - Drought
+% SR_obs      = data(1110:1127,4)/max_f; % wayqe.re - Drought
+% SR_obs           = data(1:36,4)/max_f;     % Urat - Ambient
+% SR_obs           = data(37:72,4)/max_f;    % Urat - Drought
+% SR_obs           = data(73:108,4)/max_f;   % Yanchi - Ambient
+% SR_obs           = data(109:144,4)/max_f;  % Yanchi - Drought
+% SR_obs           = data(145:167,4)/max_f;  % Hongyuan - Ambient
+% SR_obs           = data(168:191,4)/max_f; % Hongyuan - Drought
+% SR_obs           = data(192:226,4)/max_f;  % Hulunber - Ambient
+% SR_obs           = data(227:262,4)/max_f; % Hulunber - Drought
+SR_obs           = data(263:296,4)/max_f;  % Naqui - Ambient
+% SR_obs           = data(297:331,4)/max_f; % Naqui - Drought
 
 % Standard deviations
 % SR_sd      = data(1:18,5)/max_f; % Ayora.ES - Ambient
@@ -220,7 +252,17 @@ SR_obs      = data(1110:1127,4)/max_f; % wayqe.re - Drought
 % SR_sd      = data(1056:1073,5)/max_f; % ukulingadrt.za - Ambient
 % SR_sd      = data(1074:1091,5)/max_f; % ukulingadrt.za - Drought
 % SR_sd      = data(1092:1109,5)/max_f; % wayqe.re - Ambient
-SR_sd      = data(1110:1127,5)/max_f; % wayqe.re - Drought
+% SR_sd      = data(1110:1127,5)/max_f; % wayqe.re - Drought
+% SR_sd           = data(1:36,5)/max_f;     % Urat - Ambient
+% SR_sd           = data(37:72,5)/max_f;    % Urat - Drought
+% SR_sd           = data(73:108,5)/max_f;   % Yanchi - Ambient
+% SR_sd           = data(109:144,5)/max_f;  % Yanchi - Drought
+% SR_sd           = data(145:167,5)/max_f;  % Hongyuan - Ambient
+% SR_sd           = data(168:191,5)/max_f; % Hongyuan - Drought
+% SR_sd           = data(192:226,5)/max_f;  % Hulunber - Ambient
+% SR_sd           = data(227:262,5)/max_f; % Hulunber - Drought
+SR_sd           = data(263:296,5)/max_f;  % Naqui - Ambient
+% SR_sd           = data(297:331,5)/max_f; % Naqui - Drought
 
 % Objective function - residual sum of squares
 SSE_1       = sum(((log(SR_obs) - log(SR_sim)).^2)./(log(SR_sd)).^2);

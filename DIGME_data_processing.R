@@ -20,7 +20,8 @@ data = read_sheet("https://docs.google.com/spreadsheets/d/1TtHcLwdtphcwGAROzgd4F
 WP_trt  = read_sheet("https://docs.google.com/spreadsheets/d/1yTzFDjjWzWhIGT6WMFmrT-u8JUYbfQjWOO6RqzMhSCA/edit?gid=1294384012#gid=1294384012","Sheet1")
 WP_plot = read_sheet("https://docs.google.com/spreadsheets/d/1yTzFDjjWzWhIGT6WMFmrT-u8JUYbfQjWOO6RqzMhSCA/edit?gid=732363706#gid=732363706","Sheet2")
 
-# Bulk density----
+# Bulk density ----
+# Test for outliers
 
 # Determine number of outliers per site 
 # Create a dataset with the mean and std for bulk density per site
@@ -45,6 +46,7 @@ data_BD.final   = data_BD.2 %>% select("SiteCode","RainTrt","BD") %>% group_by(S
 write.csv(data_BD.final, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_BD_clean.csv")
 
 # Particle Density----
+# Test for outliers
 
 # Determine number of outliers per site 
 # Two sites do not have information of particle density. 
@@ -78,6 +80,8 @@ data_PD.final   = data_PD.2 %>% select("SiteCode","RainTrt","PD") %>% group_by(S
 write.csv(data_PD.final, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_PD_clean.csv")
 
 # Porosity----
+# Calculation of porosity. In case, particle density is missing or is too low compared to 
+# bulk density, specific gravity is used. 
 
 # Soil Porosity = (1-(Bulk Density ÷ Particle Density))  
 new_data = as.data.frame(cbind(data_BD.final$SiteCode,data_BD.final$mean,data_PD.final$mean))
@@ -101,6 +105,7 @@ sheet_write(DIGME_physicochemical_clean,
             sheet = "DIGME_physicochemical")
 
 # Convert GWC to VWC----
+# Conversion from gravimetric to volumetric water content
 # VWC = GWC * BD
 a           = unique(data_PD$SiteCode)
 data_global = c()
@@ -115,6 +120,7 @@ data_global <- apply(data_global,2,as.character)
 write.csv(data_global, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_data_intermediate.csv")
 
 # Water Potential Curves - Data preparation----
+# Data preparation for fitting data to Van Genuchten model in Matlab
 
 # Homogenize column names
 WP_plot           = subset(WP_plot, select = -c(FullCode))
@@ -182,6 +188,7 @@ write.table(WP_matlab, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_mod
             row.names = TRUE, col.names = FALSE,quote = FALSE)
 
 # Water Potential Curves - Plotting and conversion ----
+# Data conversion using the results from Matlab
 
 # Data preparation - VG
 Site             = unique(DIGME_physicochemical_clean$Site)
@@ -193,16 +200,7 @@ sheet_write(parameters_VG,
             ss = "https://docs.google.com/spreadsheets/d/1OJcBfY9yMwQdk1TSoiQ7dzffZxdhucWY6p0QqFClAIo/edit?gid=0#gid=0",
             sheet = "parameters_VG")
 
-# Data preparation - BC
-parameters_BC    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_BC.csv",dec=".")
-parameters_BC    = as.data.frame(cbind(Site,parameters_BC))
-write.csv(parameters_BC, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_BC.csv")
-# Writing in google drive
-sheet_write(parameters_BC,
-            ss = "https://docs.google.com/spreadsheets/d/1FnmhOU7qg6aYkZsfNXv8XDXCDqTctqDetmCr73fGOd4/edit?gid=0#gid=0",
-            sheet = "parameters_BC")
-
-# Conversion using VG parameters----
+# Conversion using VG parameters
 
 DIGME_data          = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_data_intermediate.csv",dec=".")
 parameters_VG       = read_sheet("https://docs.google.com/spreadsheets/d/1OJcBfY9yMwQdk1TSoiQ7dzffZxdhucWY6p0QqFClAIo/edit?gid=1017252855#gid=1017252855")
@@ -231,6 +229,7 @@ sheet_write(DIGME_data_global.1,
             sheet = "DIGME_data_global")
 
 # Manzoni Model - Data preparation----
+# Data preparation for modeling fitting of the Mazoni model in Matlab
 # Merge with ANPP
 DIGME_data_global.1 = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
 updated_databse     = read_sheet("https://docs.google.com/spreadsheets/d/1BgfeqJV9OGIczWRoWzy5BkdFc2ieV2wr_OBerlMUoxY/edit?gid=789471970#gid=789471970")
@@ -262,7 +261,8 @@ for(i in a){
   data_manzoni.1 = rbind(data_manzoni.1, temp.1) 
 }
 
-# Complete with the mean value
+# SOM data analysis
+# Complete SOM with the mean value in case the data is missing
 data_manzoni.2 = c()
 for(i in a){
   d.1     = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
@@ -278,6 +278,7 @@ for(i in a){
 }
 
 # Determine soil organic carbon = SOM/1.72
+# (final units CO2 ug g (C)-1 h-1)
 data_manzoni.2 = data_manzoni.2 %>% mutate(SOC = SOM/1.72)
 # Normalize CO2 flux by SOC
 data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>% 
@@ -287,6 +288,8 @@ data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>%
   mutate(CO2_w2b_norm = as.numeric(unlist(CO2_w2b))/SOC)
 
 # Change negative values to NA so we do not consider them for the mean value
+# Keep in mind that we are not discarting the first observation, assuming there is
+# no birch effect
 data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w1a_norm = replace(CO2_w1a_norm, CO2_w1a_norm < 0, NA))
 data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w1b_norm = replace(CO2_w1b_norm, CO2_w1b_norm < 0, NA))
 data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_w2a_norm = replace(CO2_w2a_norm, CO2_w2a_norm < 0, NA))
@@ -347,114 +350,7 @@ write.table(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGM
 rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_val.d2,b,
    meam_am,meam_dr,temp1,temp2)
 
-# Conversion using BC parameters----
-
-DIGME_data          = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_data_intermediate.csv",dec=".")
-parameters_BC       = read_sheet("https://docs.google.com/spreadsheets/d/1FnmhOU7qg6aYkZsfNXv8XDXCDqTctqDetmCr73fGOd4/edit?gid=0#gid=0")
-Site                = unique(parameters_BC$Site)
-
-DIGME_data_global.1 = c()
-for(i in Site){
-  d.1    = DIGME_data %>% filter(SiteCode == i)
-  d.2    = parameters_BC %>% filter(Site == i)
-  temp.1 = d.1 %>% mutate(theta = (d.2$theta_s - d.2$theta_r)/(as.numeric(unlist(d.1$ActualVWC)) - d.2$theta_r)) 
-  temp.2 = temp.1 %>% mutate(n_1 = rep(1/d.2$n,each=nrow(d.1))) %>%
-    mutate(alpha_1 = rep(1/d.2$alpha,each=nrow(d.1)))
-  temp.3 = temp.2 %>% mutate(ActualWP = temp.2$alpha_1*(temp.1$theta)^temp.2$n_1) 
-  DIGME_data_global.1 = rbind(DIGME_data_global.1, temp.3) 
-}
-# Omit NAs
-DIGME_data_global.1 = DIGME_data_global.1 %>% drop_na(ActualWP)
-DIGME_data_global.1 = DIGME_data_global.1 %>% drop_na(CO2_eq)
-
-write.csv(DIGME_data_global.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_data_global_BC.csv")
-# Writing in google drive
-sheet_write(DIGME_data_global.1,
-            ss = "https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0",
-            sheet = "DIGME_data_global.BC")
-
-# Manzoni Model - Data preparation----
-DIGME_data_global.1 = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
-
-# Replace all higher WP values by the threshold of 1000 Bars, assuming that we should
-# not have microbial activity below 1000 bars
-DIGME_data_global.1$ActualWP[DIGME_data_global.1$ActualWP > 1000] = 1000
-
-# Reorganize treatments
-a              = unique(DIGME_data_global.1$SiteCode)
-data_manzoni.1 = c()
-for(i in a){
-  d.1    = DIGME_data_global.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
-  d.2    = DIGME_data_global.1 %>% filter(SiteCode == i&RainTrt=="Drought")
-  temp.1 = rbind(d.1,d.2)
-  data_manzoni.1 = rbind(data_manzoni.1, temp.1) 
-}
-
-# Complete with the mean value
-data_manzoni.2 = c()
-for(i in a){
-  d.1     = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Ambient")
-  meam_am = mean(d.1$SOM,na.rm = TRUE)
-  temp1   = d.1 %>% mutate(SOM = case_when(SOM  = is.na(SOM) ~ meam_am,
-                                           SOM !=is.na(SOM)  ~ SOM)) 
-  d.2     = data_manzoni.1 %>% filter(SiteCode == i&RainTrt=="Drought")
-  meam_dr = mean(d.2$SOM,na.rm = TRUE)
-  temp2   = d.2 %>% mutate(SOM = case_when(SOM  = is.na(SOM) ~ meam_dr,
-                                           SOM !=is.na(SOM)  ~ SOM))
-  temp.1  = rbind(temp1,temp2)
-  data_manzoni.2 = rbind(data_manzoni.2, temp.1) 
-}
-
-# Determine soil organic carbon = SOM/1.72
-data_manzoni.2 = data_manzoni.2 %>% mutate(SOC = SOM/1.72)
-# Normalize CO2 flux by SOC
-data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_eq_norm = CO2_eq/SOC) %>% 
-  mutate(CO2_w1b_norm = as.numeric(unlist(CO2_w1b))/SOC) %>% 
-  mutate(CO2_w2a_norm = as.numeric(unlist(CO2_w2a))/SOC) %>%
-  mutate(CO2_w2b_norm = as.numeric(unlist(CO2_w2b))/SOC)
-
-# Obtain standard deviation of CO2 fluxes
-data_manzoni.2 = data_manzoni.2 %>% mutate(CO2_sd = rowSds(as.matrix(data_manzoni.2[,c(44,45,46)]),
-                                                           na.rm = TRUE))
-# Omit NAs
-data_manzoni.2 = data_manzoni.2 %>% drop_na(CO2_w2a_norm)
-
-# 3Sigma rule to check for outliers for the CO2 repetitions----
-# https://www.jstor.org/stable/2684253?seq=1
-data_manzoni.2 = data_manzoni.2 %>% mutate(sigma_rule = CO2_eq_norm + 3*CO2_sd)
-data_manzoni.3 = data_manzoni.2 %>% mutate(sigma_result.1 = case_when(CO2_w1b_norm >= sigma_rule ~ 0,
-                                                                      CO2_w1b_norm <  sigma_rule ~ 1))
-data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.2 = case_when(CO2_w2a_norm >= sigma_rule ~ 0,
-                                                                      CO2_w2a_norm <  sigma_rule ~ 1))
-data_manzoni.3 = data_manzoni.3 %>% mutate(sigma_result.3 = case_when(CO2_w2b_norm >= sigma_rule ~ 0,
-                                                                      CO2_w2b_norm <  sigma_rule ~ 1))
-# 3Sigma rule to check for outliers for the SOM----
-data_manzoni.4 = c()
-b              = c("Ambient","Drought")
-for(i in a){
-  d.1    = data_manzoni.3 %>% filter(SiteCode == i&RainTrt=="Ambient")
-  d.2    = data_manzoni.3 %>% filter(SiteCode == i&RainTrt=="Drought")
-  sigma_val.d1 = mean(d.1$SOM) + 3*sd(d.1$SOM)
-  sigma_val.d2 = mean(d.2$SOM) + 3*sd(d.2$SOM)
-  d.1       = d.1 %>% mutate(sigma_SOM = case_when(SOM >= sigma_val.d1 ~ 0,
-                                                   SOM <  sigma_val.d1 ~ 1))
-  d.2       = d.2 %>% mutate(sigma_SOM = case_when(SOM >= sigma_val.d2 ~ 0,
-                                                   SOM <  sigma_val.d2 ~ 1)) 
-  temp.1 = rbind(d.1,d.2)
-  data_manzoni.4 = rbind(data_manzoni.4, temp.1) 
-}
-# Erase zeros
-data_manzoni.5 = data_manzoni.4 %>% filter(as.numeric(unlist(sigma_SOM)) > 0)
-write.csv(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_BC.csv")
-
-# Save for matlab processing
-data_manzoni.5 = data_manzoni.5 %>% select(c("ActualVWC","ActualWP","CO2_eq_norm","CO2_sd"))
-write.table(data_manzoni.5, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/data_manzoni_matlab_BC.txt", sep = "\t",
-            row.names = TRUE, col.names = FALSE,quote = FALSE)
-rm(d.1,d.2,data_manzoni,a,i,temp.1,data_manzoni.1,sigma_rule,sigma_val.d1,sigma_val.d2,b,
-   meam_am,meam_dr,temp1,temp2)
-
-# Manzoni Model Results - Plotting and conversion using VG and Manzoni model----
+# Manzoni Model Results - Data integration into final dataset----
 
 # Data preparation
 DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
@@ -469,98 +365,6 @@ sheet_write(parameters_manzoni,
             ss = "https://docs.google.com/spreadsheets/d/1a77xdxHZ6yH4D0j0ATR1gzKu2CNQoq5-5W0PJkTnjUs/edit?gid=0#gid=0",
             sheet = "parameters_manzoni")
 
-# Manzoni Model Results using 1/alpha as field capacity - Plotting and conversion ----
-
-# Data preparation
-DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
-Site                  = unique(DIGME_data_global.1$SiteCode)
-Site                  = rep(Site,each = 2)
-RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
-parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_new.csv",dec=".")
-parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
-write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_new.csv")
-# Writing in google drive
-sheet_write(parameters_manzoni,
-            ss = "https://docs.google.com/spreadsheets/d/1TOcf6h7epS19-OK4vtYY7LimcjH-2kqhGbt0xRy_Dfo/edit?gid=0#gid=0",
-            sheet = "parameters_mazoni_alpha_fc")
-
-# Manzoni Model Results - Plotting and conversion using VG and Manzoni model BC-WP----
-
-# Data preparation
-DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
-Site                  = unique(DIGME_data_global.1$SiteCode)
-Site                  = rep(Site,each = 2)
-RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
-parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_BC.csv",dec=".")
-parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
-write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_BC.csv")
-# Writing in google drive
-sheet_write(parameters_manzoni,
-            ss = "https://docs.google.com/spreadsheets/d/1DDwsaQWmRGa-j05NySOPb71zGiyzyAQGMFhUykVCp-0/edit?gid=0#gid=0",
-            sheet = "parameters_manzoni_BC")
-
-# Manzoni Model Results - Plotting and conversion using VG and Manzoni model 2----
-
-# Data preparation
-DIGME_data_global.1   = read_sheet("https://docs.google.com/spreadsheets/d/1KVKi0YfLUPnEynhfzTwUc6dVt16tdEDgIAfDa4R07lA/edit?gid=0#gid=0")
-Site                  = unique(DIGME_data_global.1$SiteCode)
-Site                  = rep(Site,each = 2)
-RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
-parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/parameters_manzoni_2.csv",dec=".")
-parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
-write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_BC.csv")
-# Writing in google drive
-sheet_write(parameters_manzoni,
-            ss = "https://docs.google.com/spreadsheets/d/1QcVMBo3HzNwND0A_6tHp09MGVJGq8k1LWY5BOaSHlBM/edit?gid=0#gid=0",
-            sheet = "parameters_manzoni_2")
-
-# Water Potential conversion for new experiment----
-
-# Calling data
-data_GWC  = read_sheet("https://docs.google.com/spreadsheets/d/1212MkVTNet69tJDC7qWTifV18ZEOPMtyxpRoD3kENKs/edit?gid=0#gid=0")
-data_BD   = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/DIGME_BD_clean.csv")
-colnames(data_GWC) = c("Site","SiteCode","Treatment","Target_GWC")
-VG_param  = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_VG.csv")
-
-# Define the conditions and replacement values
-old_sites_n   = c("passogavia.it","P12","P13","GIG","Purdue.us","sgsdrt.us",
-                  "Sev.mix","PNE_unburned","horacg,cr","ukulingadrt.za")
-
-# Use replace() to replace the names in the 'Names' column
-data_BD_n       = data_BD[data_BD$SiteCode %in% old_sites_n, ]
-VG_param_n      = VG_param[VG_param$Site %in% old_sites_n, ]
-colnames(VG_param_n)[2] = "SiteCode"
-
-# Convert GWC to WVC
-data_GWC_new = c()
-for(i in old_sites_n){
-  b.1  = data_GWC %>% filter(SiteCode == i)
-  b.2  = data_BD_n %>% filter(SiteCode == i)
-  temp = b.1 %>% mutate(BD = as.numeric(unlist(b.2$mean))) %>%
-    mutate(Actual_VWC = as.numeric(unlist(b.1$Target_GWC))*as.numeric(unlist(b.2$mean))) 
-  data_GWC_new = rbind(data_GWC_new, temp) 
-}
-
-# Convert WVC to WP
-data_GWC_new.1 = c()
-for(i in old_sites_n){
-  d.1    = data_GWC_new %>% filter(SiteCode == i)
-  d.2    = VG_param_n %>% filter(SiteCode == i)
-  temp.1 = d.1 %>% mutate(theta = (as.numeric(unlist(d.1$Actual_VWC)) - d.2$theta_r)/(d.2$theta_s - d.2$theta_r)) %>%
-    mutate(m = rep(1 - 1/d.2$n,each=nrow(d.1)))
-  temp.2 = temp.1 %>% mutate(m_1 = 1/temp.1$m) %>% 
-    mutate(n_1 = rep(1/d.2$n,each=nrow(d.1))) %>%
-    mutate(alpha_1 = rep(1/d.2$alpha,each=nrow(d.1)))
-  temp.3 = temp.2 %>% mutate(ActualWP = temp.2$alpha_1*((1/(temp.2$theta)^temp.2$m_1)-1)^temp.2$n_1) 
-  data_GWC_new.1 = rbind(data_GWC_new.1, temp.3) 
-}
-
-write.csv(data_GWC_new.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_new_experiment.csv")
-# Writing in google drive
-sheet_write(data_GWC_new.1,
-            ss = "https://docs.google.com/spreadsheets/d/146XwlpQTggwD8AgS84J9aOEX-72sx52TrVt9yoNKnYQ/edit?gid=0#gid=0",
-            sheet = "DIGME_new_experiment")
-
 # Test Modeling for Alpha parameter from the Manzoni model----
 # manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1a77xdxHZ6yH4D0j0ATR1gzKu2CNQoq5-5W0PJkTnjUs/edit?gid=0#gid=0") # old data excluding first observations
 manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1QcVMBo3HzNwND0A_6tHp09MGVJGq8k1LWY5BOaSHlBM/edit?gid=0#gid=0")
@@ -573,7 +377,7 @@ manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.1 ~
 # Soil characteristics
 DIGME.global.soil = DIGME.global %>% select(c("SiteCode","RainTrt","pH","DOC",
                                               "MBC","SOM","MAP","MAP_CV","MAT",
-                                              "Sand","Clay")) 
+                                              "Sand","Clay","ANPP")) 
 DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>% 
   summarise(mean.pH     = mean(as.numeric(unlist(pH)),na.rm = TRUE),
             mean.DOC    = mean(as.numeric(unlist(DOC)),na.rm = TRUE),
@@ -614,19 +418,108 @@ sheet_write(manzoni.data.soil.1,
             ss = "https://docs.google.com/spreadsheets/d/1gOfam8WkT2pxAorPq5oG4nz1CM4bYLxIMYargXVzTNc/edit?gid=0#gid=0",
             sheet = "manzoni.data.soil.2")
 
-# Test Modeling for Alpha parameter from the Manzoni model with BC WP fits----
-manzoni.data = read_sheet("https://docs.google.com/spreadsheets/d/1DDwsaQWmRGa-j05NySOPb71zGiyzyAQGMFhUykVCp-0/edit?gid=0#gid=0")
-DIGME.global = read_sheet("https://docs.google.com/spreadsheets/d/1e67_fmEOtL2OhKC_aG6YGDMNpybHA_We3uRYxZSGq_A/edit?gid=0#gid=0")
+# Data Analysis for China sites ----
+combine_data_china         = read_sheet("https://docs.google.com/spreadsheets/d/1rgRuManmc2Hj-XQXlxYgBhtdeTLDAMbgW42z9g8-zDU/edit?gid=2014011289#gid=2014011289")
 
-# Remove sites with a small sample size
-manzoni.data = manzoni.data %>% filter(sample.size > 11)
-manzoni.data = manzoni.data %>%  mutate(performance = case_when(p.value >= 0.05 ~ 0,
-                                                                p.value <  0.05 ~ 1))
-# Soil characteristics
-DIGME.global.soil = DIGME.global %>% select(c("SiteCode","RainTrt","pH","DOC",
-                                              "MBC","SOM","MAP","MAP_CV","MAT",
-                                              "Sand","Clay")) 
-DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>% 
+# Convert WP units from MPa to bars
+combine_data_china = combine_data_china %>% mutate(ActualWP = ActualWP*-10)
+
+# Omit NAs
+combine_data_china = combine_data_china %>% drop_na(ActualWP)
+
+# Manzoni Model - Data preparation
+# Replace all higher WP values by the threshold of 1000 Bars, assuming that we should
+# not have microbial activity below 1000 bars
+combine_data_china$ActualWP[combine_data_china$ActualWP > 1000] = 1000
+
+# Normalization of respiration rates by SOC (final units CO2 ug g (C)-1 h-1)
+combine_data_china    = combine_data_china %>% mutate(CO2_w1a_norm = as.numeric(unlist(CO2_w1a))/`SOC%`) %>%
+  mutate(CO2_w1b_norm = as.numeric(unlist(CO2_w1b))/`SOC%`) %>% 
+  mutate(CO2_w2a_norm = as.numeric(unlist(CO2_w2a))/`SOC%`) %>%
+  mutate(CO2_w2b_norm = as.numeric(unlist(CO2_w2b))/`SOC%`)
+
+# Change negative values to NA so we do not consider them for the mean value
+# Keep in mind that we are not discarting the first observation, assuming there is
+# no birch effect
+combine_data_china = combine_data_china %>% mutate(CO2_w1a_norm = replace(CO2_w1a_norm, CO2_w1a_norm < 0, NA))
+combine_data_china = combine_data_china %>% mutate(CO2_w1b_norm = replace(CO2_w1b_norm, CO2_w1b_norm < 0, NA))
+combine_data_china = combine_data_china %>% mutate(CO2_w2a_norm = replace(CO2_w2a_norm, CO2_w2a_norm < 0, NA))
+combine_data_china = combine_data_china %>% mutate(CO2_w2b_norm = replace(CO2_w2b_norm, CO2_w2b_norm < 0, NA))
+
+# Obtain standard deviation of CO2 fluxes
+combine_data_china = combine_data_china %>% mutate(CO2_eq_norm = rowMeans(as.matrix(combine_data_china[,c(40,39,38,37)]),
+                                                                  na.rm = TRUE))
+combine_data_china = combine_data_china %>% mutate(CO2_sd = rowSds(as.matrix(combine_data_china[,c(40,39,38,37)]),
+                                                           na.rm = TRUE))
+
+# Omit NAs
+combine_data_china = combine_data_china %>% drop_na(CO2_eq_norm)
+
+# 3Sigma rule to check for outliers for the CO2 repetitions
+# https://www.jstor.org/stable/2684253?seq=1
+combine_data_china = combine_data_china %>% mutate(sigma_rule = CO2_eq_norm + 3*CO2_sd)
+combine_data_china = combine_data_china %>% mutate(sigma_result.1 = case_when(CO2_w1b_norm >= sigma_rule ~ 0,
+                                                                      CO2_w1b_norm <  sigma_rule ~ 1,
+                                                                      CO2_w1b_norm <  0 ~ 0))
+combine_data_china = combine_data_china %>% mutate(sigma_result.2 = case_when(CO2_w2a_norm >= sigma_rule ~ 0,
+                                                                      CO2_w2a_norm <  sigma_rule ~ 1,
+                                                                      CO2_w2a_norm <  0 ~ 0))
+combine_data_china = combine_data_china %>% mutate(sigma_result.3 = case_when(CO2_w2b_norm >= sigma_rule ~ 0,
+                                                                      CO2_w2b_norm <  sigma_rule ~ 1,
+                                                                      CO2_w2b_norm <  0 ~ 0))
+combine_data_china = combine_data_china %>% mutate(sigma_result.4 = case_when(CO2_w1a_norm >= sigma_rule ~ 0,
+                                                                      CO2_w1a_norm <  sigma_rule ~ 1,
+                                                                      CO2_w1a_norm <  0 ~ 0))
+
+# 3Sigma rule to check for outliers for the SOC
+combine_data_china.1 = c()
+a                    = unique(combine_data_china$SiteCode)
+b                    = c("Ambient","Drought")
+for(i in a){
+  d.1    = combine_data_china %>% filter(SiteCode == i&RainTrt=="Ambient")
+  d.2    = combine_data_china %>% filter(SiteCode == i&RainTrt=="Drought")
+  sigma_val.d1 = mean(d.1$`SOC%`) + 3*sd(d.1$`SOC%`)
+  sigma_val.d2 = mean(d.2$`SOC%`) + 3*sd(d.2$`SOC%`)
+  d.1       = d.1 %>% mutate(sigma_SOM = case_when(`SOC%` >= sigma_val.d1 ~ 0,
+                                                   `SOC%` <  sigma_val.d1 ~ 1))
+  d.2       = d.2 %>% mutate(sigma_SOM = case_when(`SOC%` >= sigma_val.d2 ~ 0,
+                                                   `SOC%` <  sigma_val.d2 ~ 1)) 
+  temp.1 = rbind(d.1,d.2)
+  combine_data_china.1 = rbind(combine_data_china.1, temp.1) 
+}
+
+# Erase zeros
+combine_data_china.1 = combine_data_china.1 %>% filter(as.numeric(unlist(sigma_SOM)) > 0)
+combine_data_china.1 = apply(combine_data_china.1,2,as.character)
+write.csv(combine_data_china.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/china_sites.csv")
+
+# Save for matlab processing
+combine_data_china.1 = as.data.frame(combine_data_china.1) %>% select(c("Moist","ActualWP","CO2_eq_norm","CO2_sd"))
+write.table(combine_data_china.1, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/General_data/china_matlab.txt", sep = "\t",
+            row.names = TRUE, col.names = FALSE,quote = FALSE)
+
+# Merge datasets (globe + china)----
+
+combine_data_china    = read_sheet("https://docs.google.com/spreadsheets/d/1rgRuManmc2Hj-XQXlxYgBhtdeTLDAMbgW42z9g8-zDU/edit?gid=2014011289#gid=2014011289")
+Site                  = unique(combine_data_china$SiteCode)
+Site                  = rep(Site,each = 2)
+RainTrt               = rep(c("Ambient","Drought"),times = length(unique(Site)))
+parameters_manzoni    = read.csv("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/parameters_manzoni_china.csv",dec=".")
+parameters_manzoni    = as.data.frame(cbind(Site,RainTrt,parameters_manzoni))
+write.csv(parameters_manzoni, file = "C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/output_files/DIGME_parameters_manzoni_china.csv")
+
+# Add performance score
+parameters_manzoni = parameters_manzoni %>% filter(sample.size > 11)
+parameters_manzoni = parameters_manzoni %>%  mutate(performance = case_when(p.value >= 0.1 ~ 0,
+                                                                            p.value <  0.1 ~ 1))
+# Add soil properties data
+combine_data_china_soil = combine_data_china %>% mutate(SOM = `SOC%`*1.72)
+
+combine_data_china_soil = combine_data_china_soil %>% select(c("SiteCode","RainTrt","pH","DOC",
+                                                               "MBC","SOM","MAP","MAP_CV","MAT",
+                                                               "Sand","Clay","ANPP")) 
+# Mean values
+combine_data_china_soil = combine_data_china_soil %>% group_by(SiteCode,RainTrt) %>% 
   summarise(mean.pH     = mean(as.numeric(unlist(pH)),na.rm = TRUE),
             mean.DOC    = mean(as.numeric(unlist(DOC)),na.rm = TRUE),
             mean.MBC    = mean(as.numeric(unlist(MBC)),na.rm = TRUE),
@@ -635,109 +528,23 @@ DIGME.global.soil = DIGME.global.soil %>% group_by(SiteCode,RainTrt) %>%
             mean.MAP_CV = mean(as.numeric(unlist(MAP_CV)),na.rm = TRUE),
             mean.MAT    = mean(as.numeric(unlist(MAT)),na.rm = TRUE),
             mean_sand   = mean(as.numeric(unlist(Sand)),na.rm = TRUE),
-            mean_clay   = mean(as.numeric(unlist(Clay)),na.rm = TRUE))
-
+            mean_clay   = mean(as.numeric(unlist(Clay)),na.rm = TRUE),
+            ANPP        = mean(as.numeric(unlist(ANPP)),na.rm = TRUE))
 # Join both datasets
-names(DIGME.global.soil)[names(DIGME.global.soil) == 'SiteCode'] <- 'Site'
-manzoni.data.soil = left_join(manzoni.data,DIGME.global.soil, by=c('Site',"RainTrt"))
+names(combine_data_china_soil)[names(combine_data_china_soil) == 'SiteCode'] <- 'Site'
+manzoni.data.soil.china = left_join(parameters_manzoni,combine_data_china_soil, by=c('Site',"RainTrt"))
+manzoni.data.soil.china = replace(manzoni.data.soil.china, 17, NA)
 
-# Writing in google drive
-sheet_write(manzoni.data.soil,
-            ss = "https://docs.google.com/spreadsheets/d/1-EW40Z7Wudv1qQBa4wZFCBu68xonKDBkqokniVwRZTo/edit?gid=0#gid=0",
-            sheet = "manzoni.data.soil_BC")
-# Adding ANPP data
-data                = read_sheet("https://docs.google.com/spreadsheets/d/1TtHcLwdtphcwGAROzgd4F_-L7l6KsohjCAENciR2OrY/edit?gid=863709267#gid=863709267")
-data                = data %>% select(c("SiteCode","RainTrt","ANPP"))
-manzoni.data.soil   = read_sheet("https://docs.google.com/spreadsheets/d/1-EW40Z7Wudv1qQBa4wZFCBu68xonKDBkqokniVwRZTo/edit?gid=0#gid=0")
-Site                = unique(manzoni.data.soil$Site)
-manzoni.data.soil.1 = c()
-for(i in Site){
-  d.1    = manzoni.data.soil %>% filter(Site == i&RainTrt=="Ambient")
-  t.1    = data %>% filter(SiteCode == i&RainTrt=="Ambient")
-  d.1    = d.1 %>% mutate(ANPP = mean(t.1$ANPP))
-  d.2    = manzoni.data.soil %>% filter(Site == i&RainTrt=="Drought")
-  t.2    = data %>% filter(SiteCode == i&RainTrt=="Drought")
-  d.2    = d.2 %>% mutate(ANPP = mean(t.2$ANPP))
-  temp.1 = rbind(d.1,d.2)
-  manzoni.data.soil.1 = rbind(manzoni.data.soil.1, temp.1) 
-}
-# Writing in google drive
-sheet_write(manzoni.data.soil.1,
-            ss = "https://docs.google.com/spreadsheets/d/1-EW40Z7Wudv1qQBa4wZFCBu68xonKDBkqokniVwRZTo/edit?gid=0#gid=0",
-            sheet = "manzoni.data.soil_BC")
+# Merge with non-china sites
+manzoni.data.soil.no.china = read_sheet("https://docs.google.com/spreadsheets/d/1gOfam8WkT2pxAorPq5oG4nz1CM4bYLxIMYargXVzTNc/edit?gid=0#gid=0")
 
-# PCR and VG model fit----
-manzoni.data.soil.t = read_sheet("https://docs.google.com/spreadsheets/d/11UcwPIUcppmXzKzgOYo5hxTk9k0C8-fFI90dpxdOQ9w/edit?gid=0#gid=0")
-manzoni.data.soil   = manzoni.data.soil.t %>% filter(performance == 1)
-pca_model = prcomp(manzoni.data.soil[c("mean.DOC","mean.pH","mean.MBC","mean.MAP","mean.MAT","ANPP")],
-                center = TRUE,
-                scale. = TRUE)
-print(pca_model)
-summary(pca_model)
+manzoni.data.total         = as.data.frame(rbind(manzoni.data.soil.no.china,
+                                                 manzoni.data.soil.china))
+# Save in google drive
+names(manzoni.data.total)[names(manzoni.data.total) == 'SEE'] <- 'SSE'
+sheet_write(manzoni.data.total,
+            ss = "https://docs.google.com/spreadsheets/d/1JLTtg4IZ3gzOsnEXeCTUgndjLWcC4eFvefWOMsOtXSw/edit?gid=0#gid=0",
+            sheet = "manzoni.data.total")
 
-biplot_1 = fviz_pca_biplot(pca_model,label="none",habillage=manzoni.data.soil$RainTrt) + 
-  theme_minimal()
-biplot_1
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/biplot_1.png",
-    width=3500*1.35,height=1969*1.35,res=300)
-print(biplot_1)
-dev.off()
 
-biplot_2 = fviz_pca_biplot(pca_model, label ="var") + theme_minimal()
-biplot_2
-png("C:/luciana_datos/UCI/Project_13 (DIGME)/DIGME_model/Figures/exploratory_figures/biplot_2.png",
-    width=3500*1.35,height=1969*1.35,res=300)
-print(biplot_2)
-dev.off()
-
-# Alpha Model ----
-
-# Get Delta Alpha
-del_alpha = c()
-site_n    = unique(manzoni.data.soil.t$Site)
-for(i in site_n){
-  b.1  = manzoni.data.soil.t %>% filter(Site == i & RainTrt == "Ambient")
-  b.2  = manzoni.data.soil.t %>% filter(Site == i & RainTrt == "Drought")
-  temp = b.1$alpha - b.2$alpha 
-  del_alpha = as.data.frame(rbind(del_alpha,cbind(temp,b.1$mean.MAP,b.1$mean.MAT,
-                                                  mean(b.1$mean.pH,b.2$mean.pH),
-                                                  (b.1$ANPP - b.2$ANPP)))) 
-}
-colnames(del_alpha) = c("delta_alpha","MAP","MAT","pH","delta_ANPP")
-
-# Models with the whole data set
-
-model.1 = lm(delta_alpha ~ (MAP+MAT+pH+delta_ANPP)^2,data = del_alpha)
-summary(model.1)
-
-# select best model according to AIC using mixed selection
-best_model      = step(model.1, direction = "both", # both = mixed selection
-                                  trace     = TRUE) # do not display intermediate steps
-summary(best_model)
-# delta_alpha ~ MAP + pH + delta_ANPP + MAP:pH + MAP:delta_ANPP
-
-# Models with the best performance sites
-
-# Get Delta Alpha
-del_alpha.2 = c()
-manzoni.data.soil_red = manzoni.data.soil[-c(7,8,11,12,15,16,21,22,29),]
-site_n      = unique(manzoni.data.soil_red$Site)
-for(i in site_n){
-  b.1  = manzoni.data.soil_red %>% filter(Site == i & RainTrt == "Ambient")
-  b.2  = manzoni.data.soil_red %>% filter(Site == i & RainTrt == "Drought")
-  temp = b.1$alpha - b.2$alpha 
-  del_alpha.2 = as.data.frame(rbind(del_alpha.2,cbind(temp,b.1$mean.MAP,b.1$mean.MAT,
-                                                  mean(b.1$mean.pH,b.2$mean.pH),
-                                                  (b.1$ANPP - b.2$ANPP)))) 
-}
-colnames(del_alpha.2) = c("delta_alpha","MAP","MAT","pH","delta_ANPP")
-
-model.1.1 = lm(delta_alpha ~ (MAP+MAT+pH+delta_ANPP)^2,data = del_alpha)
-summary(model.1.1)
-
-# select best model according to AIC using mixed selection
-best_model.1      = step(model.1.1, direction = "both", # both = mixed selection
-                       trace     = TRUE) # do not display intermediate steps
-summary(best_model.1)
-# delta_alpha ~ MAP + pH + delta_ANPP + MAP:pH + MAP:delta_ANPP
 

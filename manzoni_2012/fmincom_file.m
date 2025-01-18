@@ -57,7 +57,7 @@ log10(max(x))
 min(x)
 
 %%
-p = [1.3 1 0.0101]; % 0.0101; 0.00101; 0.000101
+p = [2.0 0.5 0.00101]; % 0.0101; 0.00101; 0.000101
 %%
 ObjectiveFunction = @calibration_manzoni;
 
@@ -66,8 +66,8 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [3.1 1e2 1]; % 1e2
-lb = [-1 1e-2 0.01]; % 0.01; 0.001; 0.00001 
+ub = [3.1 0.8 1]; % 1e2
+lb = [-1 1e-2 0.001]; % 0.01; 0.001; 0.00001 
 
 p0 = p;
 
@@ -129,6 +129,16 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 %% save('ukulingadrt.za_drought_2.mat','p')
 %% save('wayqe.re_ambient_2.mat','p')
 %% save('wayqe.re_drought_2.mat','p')
+%% save('Urat_ambient_2.mat','p')
+%% save('Urat_drought_2.mat','p')
+%% save('Yanchi_ambient_2.mat','p')
+%% save('Yanchi_drought_2.mat','p')
+%% save('Hongyuan_ambient_2.mat','p')
+%% save('Hongyuan_drought_2.mat','p')
+%% save('Hulunber_ambient_2.mat','p')
+%% save('Hulunber_drought_2.mat','p')
+%% save('Naqui_ambient_2.mat','p')
+%% save('Naqui_drought_2.mat','p')
 
 %%
 log10(max(x))
