@@ -2,13 +2,13 @@
 
 %% Calling Data %%
 
-data    = load("data_manzoni_matlab.txt");
+data    = load("manzoni_new_matlab.txt");
 p_final = zeros(52,8);
 a       = zeros(1e6,52);
 
-%% Plotting %%
+%% Plotting
 
-load('Ayora_ambient_2.mat')
+load('Ayora_ambient_final.mat')
 WP_obs      = data(1:18,3);  
 max_f       = max(data(1:18,4)); % maximum respiration
 SR_obs      = data(1:18,4)/max_f;
@@ -43,7 +43,7 @@ a(:,1)       = WP_sim;
 a(:,2)       = SR_sim;
 
 %
-load('Ayora_drought_2.mat')
+load('Ayora_drought_final.mat')
 WP_obs      = data(19:36,3);  
 max_f       = max(data(19:36,4)); % maximum respiration
 SR_obs      = data(19:36,4)/max_f;
@@ -73,418 +73,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(2,:) = p;
-
-%
-load('GIG_ambient_2.mat')
-WP_obs      = data(37:60,3);  
-max_f       = max(data(37:60,4)); % maximum respiration
-SR_obs      = data(37:60,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(37:60,5)/max_f;
-
-% fig = figure;
-subplot(3,4,3);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('GIG - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(3,:) = p;
 a(:,3)       = WP_sim;
 a(:,4)       = SR_sim;
 
 %
-load('GIG_drought_2.mat')
-WP_obs      = data(61:84,3);  
-max_f       = max(data(61:84,4)); % maximum respiration
-SR_obs      = data(61:84,4)/max_f;
+load('baddrt.de_ambient_final.mat')
+WP_obs      = data(37:66,3);  
+max_f       = max(data(37:66,4)); % maximum respiration
+SR_obs      = data(37:66,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(61:84,5)/max_f;
-
-subplot(3,4,4);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('GIG - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(4,:) = p;
-
-%
-load('P12_ambient_2.mat')
-WP_obs      = data(85:108,3);  
-max_f       = max(data(85:108,4)); % maximum respiration
-SR_obs      = data(85:108,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(85:108,5)/max_f;
-
-% fig = figure;
-subplot(3,4,5);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('P12 - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(5,:) = p;
-a(:,5)       = WP_sim;
-a(:,6)       = SR_sim;
-
-%
-load('P12_drought_2.mat')
-WP_obs      = data(109:132,3);  
-max_f       = max(data(109:132,4)); % maximum respiration
-SR_obs      = data(109:132,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(109:132,5)/max_f;
-
-subplot(3,4,6);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('P12 - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(6,:) = p;
-
-%
-load('P13_ambient_2.mat')
-WP_obs      = data(133:156,3);  
-max_f       = max(data(133:156,4)); % maximum respiration
-SR_obs      = data(133:156,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(133:156,5)/max_f;
-
-% fig = figure;
-subplot(3,4,7);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('P13 - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(7,:) = p;
-a(:,7)       = WP_sim;
-a(:,8)       = SR_sim;
-
-%
-load('P13_drought_2.mat')
-WP_obs      = data(157:180,3);  
-max_f       = max(data(157:180,4)); % maximum respiration
-SR_obs      = data(157:180,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(157:180,5)/max_f;
-
-subplot(3,4,8);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('P13 - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(8,:) = p;
-
-%
-load('PNE_unburned_ambient_2.mat')
-WP_obs      = data(181:198,3);  
-max_f       = max(data(181:198,4)); % maximum respiration
-SR_obs      = data(181:198,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(181:198,5)/max_f;
-
-% fig = figure;
-subplot(3,4,9);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('PNE unburned - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(9,:) = p;
-a(:,9)       = WP_sim;
-a(:,10)      = SR_sim;
-
-%
-load('PNE_unburned_drought_2.mat')
-WP_obs      = data(199:216,3);  
-max_f       = max(data(199:216,4)); % maximum respiration
-SR_obs      = data(199:216,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(199:216,5)/max_f;
-
-subplot(3,4,10);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('PNE unburned - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(10,:) = p;
-
-%
-load('Purdue.us_ambient_2.mat')
-WP_obs      = data(217:240,3);  
-max_f       = max(data(217:240,4)); % maximum respiration
-SR_obs      = data(217:240,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(217:240,5)/max_f;
-
-% fig = figure;
-subplot(3,4,11);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Purdue - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(11,:) = p;
-a(:,11)       = WP_sim;
-a(:,12)       = SR_sim;
-%
-load('Purdue.us_drought_2.mat')
-WP_obs      = data(241:264,3);  
-max_f       = max(data(241:264,4)); % maximum respiration
-SR_obs      = data(241:264,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(241:264,5)/max_f;
-
-subplot(3,4,12);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Purdue - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(12,:) = p;
-
-%
-
-load('Sev.mix_ambient_2.mat')
-WP_obs      = data(265:294,3);  
-max_f       = max(data(265:294,4)); % maximum respiration
-SR_obs      = data(265:294,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(265:294,5)/max_f;
-
-fig = figure;
-subplot(3,4,1);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Sev.mix - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(13,:) = p;
-a(:,13)       = WP_sim;
-a(:,14)       = SR_sim;
-
-%
-load('Sev.mix_drought_2.mat')
-WP_obs      = data(295:324,3);  
-max_f       = max(data(295:324,4)); % maximum respiration
-SR_obs      = data(295:324,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(295:324,5)/max_f;
-
-subplot(3,4,2);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Sev.mix - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(14,:) = p;
-
-%
-load('baddrt.de_ambient_2.mat')
-WP_obs      = data(325:354,3);  
-max_f       = max(data(325:354,4)); % maximum respiration
-SR_obs      = data(325:354,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(325:354,5)/max_f;
+SR_sd       = data(37:66,5)/max_f;
 
 % fig = figure;
 subplot(3,4,3);
@@ -507,18 +107,18 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(15,:) = p;
-a(:,15)       = WP_sim;
-a(:,16)       = SR_sim;
+p_final(3,:) = p;
+a(:,5)       = WP_sim;
+a(:,6)       = SR_sim;
 
-load('baddrt.de_drought_2.mat')
-WP_obs      = data(355:383,3);  
-max_f       = max(data(355:383,4)); % maximum respiration
-SR_obs      = data(355:383,4)/max_f;
+load('baddrt.de_drought_final.mat')
+WP_obs      = data(67:95,3);  
+max_f       = max(data(67:95,4)); % maximum respiration
+SR_obs      = data(67:95,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(355:383,5)/max_f;
+SR_sd       = data(67:95,5)/max_f;
 
 subplot(3,4,4);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -540,17 +140,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(16,:) = p;
+p_final(4,:) = p;
+a(:,7)       = WP_sim;
+a(:,8)       = SR_sim;
 
 %
-load('brhill.au_ambient_2.mat')
-WP_obs      = data(384:401,3);  
-max_f       = max(data(384:401,4)); % maximum respiration
-SR_obs      = data(384:401,4)/max_f;
+load('brhill.au_ambient_final.mat')
+WP_obs      = data(96:113,3);  
+max_f       = max(data(96:113,4)); % maximum respiration
+SR_obs      = data(96:113,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(384:401,5)/max_f;
+SR_sd       = data(96:113,5)/max_f;
 
 % fig = figure;
 subplot(3,4,5);
@@ -573,19 +175,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(17,:) = p;
-a(:,17)       = WP_sim;
-a(:,18)       = SR_sim;
+p_final(5,:) = p;
+a(:,9)       = WP_sim;
+a(:,10)       = SR_sim;
 
 %
-load('brhill.au_drought_2.mat')
-WP_obs      = data(402:419,3);  
-max_f       = max(data(402:419,4)); % maximum respiration
-SR_obs      = data(402:419,4)/max_f;
+load('brhill.au_drought_final.mat')
+WP_obs      = data(114:131,3);  
+max_f       = max(data(114:131,4)); % maximum respiration
+SR_obs      = data(114:131,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(402:419,5)/max_f;
+SR_sd       = data(114:131,5)/max_f;
 
 subplot(3,4,6);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -607,17 +209,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(18,:) = p;
+p_final(6,:) = p;
+a(:,11)       = WP_sim;
+a(:,12)       = SR_sim;
 
 %
-load('brookdale.ca_ambient_2.mat')
-WP_obs      = data(420:437,3);  
-max_f       = max(data(420:437,4)); % maximum respiration
-SR_obs      = data(420:437,4)/max_f;
+load('brookdale.ca_ambient_final.mat')
+WP_obs      = data(132:149,3);  
+max_f       = max(data(132:149,4)); % maximum respiration
+SR_obs      = data(132:149,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(420:437,5)/max_f;
+SR_sd       = data(132:149,5)/max_f;
 
 % fig = figure;
 subplot(3,4,7);
@@ -640,19 +244,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(19,:) = p;
-a(:,19)       = WP_sim;
-a(:,20)       = SR_sim;
+p_final(7,:) = p;
+a(:,13)       = WP_sim;
+a(:,14)       = SR_sim;
 
 %
-load('brookdale.ca_drought_2.mat')
-WP_obs      = data(438:455,3);  
-max_f       = max(data(438:455,4)); % maximum respiration
-SR_obs      = data(438:455,4)/max_f;
+load('brookdale.ca_drought_final.mat')
+WP_obs      = data(150:167,3);  
+max_f       = max(data(150:167,4)); % maximum respiration
+SR_obs      = data(150:167,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(438:455,5)/max_f;
+SR_sd       = data(150:167,5)/max_f;
 
 subplot(3,4,8);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -674,17 +278,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(20,:) = p;
+p_final(8,:) = p;
+a(:,15)       = WP_sim;
+a(:,16)       = SR_sim;
 
 %
-load('cedarsav.us_ambient_2.mat')
-WP_obs      = data(456:484,3);  
-max_f       = max(data(456:484,4)); % maximum respiration
-SR_obs      = data(456:484,4)/max_f;
+load('cedarsav.us_ambient_final.mat')
+WP_obs      = data(168:197,3);  
+max_f       = max(data(168:197,4)); % maximum respiration
+SR_obs      = data(168:197,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(456:484,5)/max_f;
+SR_sd       = data(168:197,5)/max_f;
 
 % fig = figure;
 subplot(3,4,9);
@@ -707,19 +313,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(21,:) = p;
-a(:,21)       = WP_sim;
-a(:,22)       = SR_sim;
+p_final(9,:) = p;
+a(:,17)       = WP_sim;
+a(:,18)       = SR_sim;
 
 %
-load('cedarsav.us_drought_2.mat')
-WP_obs      = data(485:512,3);  
-max_f       = max(data(485:512,4)); % maximum respiration
-SR_obs      = data(485:512,4)/max_f;
+load('cedarsav.us_drought_final.mat')
+WP_obs      = data(198:227,3);  
+max_f       = max(data(198:227,4)); % maximum respiration
+SR_obs      = data(198:227,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(485:512,5)/max_f;
+SR_sd       = data(198:227,5)/max_f;
 
 subplot(3,4,10);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -741,17 +347,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(22,:) = p;
+p_final(10,:) = p;
+a(:,19)       = WP_sim;
+a(:,20)       = SR_sim;
 
 %
-load('cobar.au_ambient_2.mat')
-WP_obs      = data(513:529,3);  
-max_f       = max(data(513:529,4)); % maximum respiration
-SR_obs      = data(513:529,4)/max_f;
+load('cobar.au_ambient_final.mat')
+WP_obs      = data(228:245,3);  
+max_f       = max(data(228:245,4)); % maximum respiration
+SR_obs      = data(228:245,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(513:529,5)/max_f;
+SR_sd       = data(228:245,5)/max_f;
 
 % fig = figure;
 subplot(3,4,11);
@@ -774,19 +382,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(23,:) = p;
-a(:,23)       = WP_sim;
-a(:,24)       = SR_sim;
+p_final(11,:) = p;
+a(:,21)       = WP_sim;
+a(:,22)       = SR_sim;
 
 %
-load('cobar.au_drought_2.mat')
-WP_obs      = data(530:546,3);  
-max_f       = max(data(530:546,4)); % maximum respiration
-SR_obs      = data(530:546,4)/max_f;
+load('cobar.au_drought_final.mat')
+WP_obs      = data(246:263,3);  
+max_f       = max(data(246:263,4)); % maximum respiration
+SR_obs      = data(246:263,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(530:546,5)/max_f;
+SR_sd       = data(246:263,5)/max_f;
 
 subplot(3,4,12);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -808,18 +416,20 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(24,:) = p;
+p_final(12,:) = p;
+a(:,23)       = WP_sim;
+a(:,24)       = SR_sim;
 
 %
 
-load('cowidrt.ca_ambient_2.mat')
-WP_obs      = data(547:570,3);  
-max_f       = max(data(547:570,4)); % maximum respiration
-SR_obs      = data(547:570,4)/max_f;
+load('cowidrt.ca_ambient_final.mat')
+WP_obs      = data(264:287,3);  
+max_f       = max(data(264:287,4)); % maximum respiration
+SR_obs      = data(264:287,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(547:570,5)/max_f;
+SR_sd       = data(264:287,5)/max_f;
 
 fig = figure;
 subplot(3,4,1);
@@ -842,19 +452,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(25,:) = p;
+p_final(13,:) = p;
 a(:,25)       = WP_sim;
 a(:,26)       = SR_sim;
 
 %
-load('cowidrt.ca_drought_2.mat')
-WP_obs      = data(571:594,3);  
-max_f       = max(data(571:594,4)); % maximum respiration
-SR_obs      = data(571:594,4)/max_f;
+load('cowidrt.ca_drought_final.mat')
+WP_obs      = data(288:311,3);  
+max_f       = max(data(288:311,4)); % maximum respiration
+SR_obs      = data(288:311,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(571:594,5)/max_f;
+SR_sd       = data(288:311,5)/max_f;
 
 subplot(3,4,2);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -876,17 +486,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(26,:) = p;
+p_final(14,:) = p;
+a(:,27)       = WP_sim;
+a(:,28)       = SR_sim;
 
 %
-load('dona.ana_ambient_2.mat')
-WP_obs      = data(595:617,3);  
-max_f       = max(data(595:617,4)); % maximum respiration
-SR_obs      = data(595:617,4)/max_f;
+load('dona.ana_ambient_final.mat')
+WP_obs      = data(312:335,3);  
+max_f       = max(data(312:335,4)); % maximum respiration
+SR_obs      = data(312:335,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(595:617,5)/max_f;
+SR_sd       = data(312:335,5)/max_f;
 
 % fig = figure;
 subplot(3,4,3);
@@ -909,19 +521,19 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(27,:) = p;
-a(:,27)       = WP_sim;
-a(:,28)       = SR_sim;
+p_final(15,:) = p;
+a(:,29)       = WP_sim;
+a(:,30)       = SR_sim;
 
 %
-load('dona.ana_drought_2.mat')
-WP_obs      = data(618:641,3);  
-max_f       = max(data(618:641,4)); % maximum respiration
-SR_obs      = data(618:641,4)/max_f;
+load('dona.ana_drought_final.mat')
+WP_obs      = data(336:359,3);  
+max_f       = max(data(336:359,4)); % maximum respiration
+SR_obs      = data(336:359,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(618:641,5)/max_f;
+SR_sd       = data(336:359,5)/max_f;
 
 subplot(3,4,4);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -943,20 +555,92 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(28,:) = p;
+p_final(16,:) = p;
+a(:,31)       = WP_sim;
+a(:,32)       = SR_sim;
 
 %
-load('hoide.de_ambient_2.mat')
-WP_obs      = data(642:659,3);  
-max_f       = max(data(642:659,4)); % maximum respiration
-SR_obs      = data(642:659,4)/max_f;
+load('GIG_ambient_final.mat')
+WP_obs      = data(360:383,3);  
+max_f       = max(data(360:383,4)); % maximum respiration
+SR_obs      = data(360:383,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(642:659,5)/max_f;
+SR_sd       = data(360:383,5)/max_f;
 
 % fig = figure;
 subplot(3,4,5);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('GIG - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(17,:) = p;
+a(:,33)       = WP_sim;
+a(:,34)       = SR_sim;
+
+
+%
+load('GIG_drought_final.mat')
+WP_obs      = data(384:407,3);  
+max_f       = max(data(384:407,4)); % maximum respiration
+SR_obs      = data(384:407,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(384:407,5)/max_f;
+
+subplot(3,4,6);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('GIG - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(18,:) = p;
+a(:,35)       = WP_sim;
+a(:,36)       = SR_sim;
+
+%
+load('hoide.de_ambient_final.mat')
+WP_obs      = data(408:425,3);  
+max_f       = max(data(408:425,4)); % maximum respiration
+SR_obs      = data(408:425,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(408:425,5)/max_f;
+
+% fig = figure;
+subplot(3,4,7);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -976,21 +660,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(29,:) = p;
-a(:,29)       = WP_sim;
-a(:,30)       = SR_sim;
+p_final(19,:) = p;
+a(:,37)       = WP_sim;
+a(:,38)       = SR_sim;
 
 %
-load('hoide.de_drought_2.mat')
-WP_obs      = data(660:677,3);  
-max_f       = max(data(660:677,4)); % maximum respiration
-SR_obs      = data(660:677,4)/max_f;
+load('hoide.de_drought_final.mat')
+WP_obs      = data(426:443,3);  
+max_f       = max(data(426:443,4)); % maximum respiration
+SR_obs      = data(426:443,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(660:677,5)/max_f;
+SR_sd       = data(426:443,5)/max_f;
 
-subplot(3,4,6);
+subplot(3,4,8);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1010,20 +694,22 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(30,:) = p;
+p_final(20,:) = p;
+a(:,39)       = WP_sim;
+a(:,40)       = SR_sim;
 
 %
-load('horacg.cr_ambient_2.mat')
-WP_obs      = data(678:701,3);  
-max_f       = max(data(678:701,4)); % maximum respiration
-SR_obs      = data(678:701,4)/max_f;
+load('horacg.cr_ambient_final.mat')
+WP_obs      = data(444:467,3);  
+max_f       = max(data(444:467,4)); % maximum respiration
+SR_obs      = data(444:467,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(678:701,5)/max_f;
+SR_sd       = data(444:467,5)/max_f;
 
 % fig = figure;
-subplot(3,4,7);
+subplot(3,4,9);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1043,21 +729,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(31,:) = p;
-a(:,31)       = WP_sim;
-a(:,32)       = SR_sim;
+p_final(21,:) = p;
+a(:,41)       = WP_sim;
+a(:,42)       = SR_sim;
 
 %
-load('horacg.cr_drought_2.mat')
-WP_obs      = data(702:725,3);  
-max_f       = max(data(702:725,4)); % maximum respiration
-SR_obs      = data(702:725,4)/max_f;
+load('horacg.cr_drought_final.mat')
+WP_obs      = data(468:491,3);  
+max_f       = max(data(468:491,4)); % maximum respiration
+SR_obs      = data(468:491,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(702:725,5)/max_f;
+SR_sd       = data(468:491,5)/max_f;
 
-subplot(3,4,8);
+subplot(3,4,10);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1077,20 +763,22 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(32,:) = p;
+p_final(22,:) = p;
+a(:,43)       = WP_sim;
+a(:,44)       = SR_sim;
 
 %
-load('hyide.de_ambient_2.mat')
-WP_obs      = data(726:742,3);  
-max_f       = max(data(726:742,4)); % maximum respiration
-SR_obs      = data(726:742,4)/max_f;
+load('hyide.de_ambient_final.mat')
+WP_obs      = data(492:509,3);  
+max_f       = max(data(492:509,4)); % maximum respiration
+SR_obs      = data(492:509,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(726:742,5)/max_f;
+SR_sd       = data(492:509,5)/max_f;
 
 % fig = figure;
-subplot(3,4,9);
+subplot(3,4,11);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1110,21 +798,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(33,:) = p;
-a(:,33)       = WP_sim;
-a(:,34)       = SR_sim;
+p_final(23,:) = p;
+a(:,45)       = WP_sim;
+a(:,46)       = SR_sim;
 
 %
-load('hyide.de_drought_2.mat')
-WP_obs      = data(743:760,3);  
-max_f       = max(data(743:760,4)); % maximum respiration
-SR_obs      = data(743:760,4)/max_f;
+load('hyide.de_drought_final.mat')
+WP_obs      = data(510:527,3);  
+max_f       = max(data(510:527,4)); % maximum respiration
+SR_obs      = data(510:527,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(743:760,5)/max_f;
+SR_sd       = data(510:527,5)/max_f;
 
-subplot(3,4,10);
+subplot(3,4,12);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1144,20 +832,23 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(34,:) = p;
+p_final(24,:) = p;
+a(:,47)       = WP_sim;
+a(:,48)       = SR_sim;
 
 %
-load('lygra.no_ambient_2.mat')
-WP_obs      = data(761:778,3);  
-max_f       = max(data(761:778,4)); % maximum respiration
-SR_obs      = data(761:778,4)/max_f;
+
+load('lygra.no_ambient_final.mat')
+WP_obs      = data(528:545,3);  
+max_f       = max(data(528:545,4)); % maximum respiration
+SR_obs      = data(528:545,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(761:778,5)/max_f;
+SR_sd       = data(528:545,5)/max_f;
 
-% fig = figure;
-subplot(3,4,11);
+fig = figure;
+subplot(3,4,1);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1177,21 +868,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(35,:) = p;
-a(:,35)       = WP_sim;
-a(:,36)       = SR_sim;
+p_final(25,:) = p;
+a(:,49)       = WP_sim;
+a(:,50)       = SR_sim;
 
 %
-load('lygra.no_drought_2.mat')
-WP_obs      = data(779:796,3);  
-max_f       = max(data(779:796,4)); % maximum respiration
-SR_obs      = data(779:796,4)/max_f;
+load('lygra.no_drought_final.mat')
+WP_obs      = data(546:563,3);  
+max_f       = max(data(546:563,4)); % maximum respiration
+SR_obs      = data(546:563,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(779:796,5)/max_f;
+SR_sd       = data(546:563,5)/max_f;
 
-subplot(3,4,12);
+subplot(3,4,2);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1211,21 +902,23 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(36,:) = p;
+p_final(26,:) = p;
+a(:,51)       = WP_sim;
+a(:,52)       = SR_sim;
 
 %
 
-load('nyngan.au_ambient_2.mat')
-WP_obs      = data(797:814,3);  
-max_f       = max(data(797:814,4)); % maximum respiration
-SR_obs      = data(797:814,4)/max_f;
+load('nyngan.au_ambient_final.mat')
+WP_obs      = data(564:581,3);  
+max_f       = max(data(564:581,4)); % maximum respiration
+SR_obs      = data(564:581,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(797:814,5)/max_f;
+SR_sd       = data(564:581,5)/max_f;
 
-fig = figure;
-subplot(3,4,1);
+% fig = figure;
+subplot(3,4,3);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1245,21 +938,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(37,:) = p;
-a(:,37)       = WP_sim;
-a(:,38)       = SR_sim;
+p_final(27,:) = p;
+a(:,53)       = WP_sim;
+a(:,54)       = SR_sim;
 
 %
-load('nyngan.au_drought_2.mat')
-WP_obs      = data(815:832,3);  
-max_f       = max(data(815:832,4)); % maximum respiration
-SR_obs      = data(815:832,4)/max_f;
+load('nyngan.au_drought_final.mat')
+WP_obs      = data(582:599,3);  
+max_f       = max(data(582:599,4)); % maximum respiration
+SR_obs      = data(582:599,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(815:832,5)/max_f;
+SR_sd       = data(582:599,5)/max_f;
 
-subplot(3,4,2);
+subplot(3,4,4);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1279,20 +972,160 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(38,:) = p;
+p_final(28,:) = p;
+a(:,55)       = WP_sim;
+a(:,56)       = SR_sim;
 
 %
-load('passogavia.it_ambient_2.mat')
-WP_obs      = data(833:856,3);  
-max_f       = max(data(833:856,4)); % maximum respiration
-SR_obs      = data(833:856,4)/max_f;
+load('P12_ambient_final.mat')
+WP_obs      = data(600:623,3);  
+max_f       = max(data(600:623,4)); % maximum respiration
+SR_obs      = data(600:623,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(833:856,5)/max_f;
+SR_sd       = data(600:623,5)/max_f;
 
 % fig = figure;
-subplot(3,4,3);
+subplot(3,4,5);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('P12 - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(29,:) = p;
+a(:,57)       = WP_sim;
+a(:,58)       = SR_sim;
+
+%
+load('P12_drought_final.mat')
+WP_obs      = data(624:647,3);  
+max_f       = max(data(624:647,4)); % maximum respiration
+SR_obs      = data(624:647,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(624:647,5)/max_f;
+
+subplot(3,4,6);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('P12 - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(30,:) = p;
+a(:,59)       = WP_sim;
+a(:,60)       = SR_sim;
+
+%
+load('P13_ambient_final.mat')
+WP_obs      = data(648:671,3);  
+max_f       = max(data(648:671,4)); % maximum respiration
+SR_obs      = data(648:671,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(648:671,5)/max_f;
+
+% fig = figure;
+subplot(3,4,7);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('P13 - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(31,:) = p;
+a(:,61)       = WP_sim;
+a(:,62)       = SR_sim;
+
+%
+load('P13_drought_final.mat')
+WP_obs      = data(672:695,3);  
+max_f       = max(data(672:695,4)); % maximum respiration
+SR_obs      = data(672:695,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(672:695,5)/max_f;
+
+subplot(3,4,8);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('P13 - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(32,:) = p;
+a(:,63)       = WP_sim;
+a(:,64)       = SR_sim;
+
+%
+load('passogavia.it_ambient_final.mat')
+WP_obs      = data(696:719,3);  
+max_f       = max(data(696:719,4)); % maximum respiration
+SR_obs      = data(696:719,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(696:719,5)/max_f;
+
+% fig = figure;
+subplot(3,4,9);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1312,21 +1145,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(39,:) = p;
-a(:,39)       = WP_sim;
-a(:,40)       = SR_sim;
+p_final(33,:) = p;
+a(:,65)       = WP_sim;
+a(:,66)       = SR_sim;
 
 %
-load('passogavia.it_drought_2.mat')
-WP_obs      = data(857:880,3);  
-max_f       = max(data(857:880,4)); % maximum respiration
-SR_obs      = data(857:880,4)/max_f;
+load('passogavia.it_drought_final.mat')
+WP_obs      = data(720:743,3);  
+max_f       = max(data(720:743,4)); % maximum respiration
+SR_obs      = data(720:743,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(857:880,5)/max_f;
+SR_sd       = data(720:743,5)/max_f;
 
-subplot(3,4,4);
+subplot(3,4,10);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1346,20 +1179,160 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(40,:) = p;
+p_final(34,:) = p;
+a(:,67)       = WP_sim;
+a(:,68)       = SR_sim;
 
 %
-load('riomayo.ar_ambient_2.mat')
-WP_obs      = data(881:895,3);  
-max_f       = max(data(881:895,4)); % maximum respiration
-SR_obs      = data(881:895,4)/max_f;
+load('PNE_unburned_ambient_final.mat')
+WP_obs      = data(744:761,3);  
+max_f       = max(data(744:761,4)); % maximum respiration
+SR_obs      = data(744:761,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(881:895,5)/max_f;
+SR_sd       = data(744:761,5)/max_f;
 
 % fig = figure;
-subplot(3,4,5);
+subplot(3,4,11);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('PNE unburned - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(35,:) = p;
+a(:,69)       = WP_sim;
+a(:,70)       = SR_sim;
+%
+load('PNE_unburned_drought_final.mat')
+WP_obs      = data(762:779,3);  
+max_f       = max(data(762:779,4)); % maximum respiration
+SR_obs      = data(762:779,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(762:779,5)/max_f;
+
+subplot(3,4,12);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('PNE unburned - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(36,:) = p;
+a(:,71)       = WP_sim;
+a(:,72)       = SR_sim;
+
+%
+
+load('Purdue.us_ambient_final.mat')
+WP_obs      = data(780:803,3);  
+max_f       = max(data(780:803,4)); % maximum respiration
+SR_obs      = data(780:803,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(780:803,5)/max_f;
+
+fig = figure;
+subplot(3,4,1);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Purdue - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(37,:) = p;
+a(:,73)       = WP_sim;
+a(:,74)       = SR_sim;
+
+%
+load('Purdue.us_drought_final.mat')
+WP_obs      = data(804:827,3);  
+max_f       = max(data(804:827,4)); % maximum respiration
+SR_obs      = data(804:827,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(804:827,5)/max_f;
+
+subplot(3,4,2);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Purdue - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(38,:) = p;
+a(:,75)       = WP_sim;
+a(:,76)       = SR_sim;
+
+%
+load('riomayo.ar_ambient_final.mat')
+WP_obs      = data(828:842,3);  
+max_f       = max(data(828:842,4)); % maximum respiration
+SR_obs      = data(828:842,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(828:842,5)/max_f;
+
+% fig = figure;
+subplot(3,4,3);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1379,21 +1352,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(41,:) = p;
-a(:,41)       = WP_sim;
-a(:,42)       = SR_sim;
+p_final(39,:) = p;
+a(:,77)       = WP_sim;
+a(:,78)       = SR_sim;
 
 %
-load('riomayo.ar_drought_2.mat')
-WP_obs      = data(896:912,3);  
-max_f       = max(data(896:912,4)); % maximum respiration
-SR_obs      = data(896:912,4)/max_f;
+load('riomayo.ar_drought_final.mat')
+WP_obs      = data(843:859,3);  
+max_f       = max(data(843:859,4)); % maximum respiration
+SR_obs      = data(843:859,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(896:912,5)/max_f;
+SR_sd       = data(843:859,5)/max_f;
 
-subplot(3,4,6);
+subplot(3,4,4);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1413,20 +1386,22 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(42,:) = p;
+p_final(40,:) = p;
+a(:,79)       = WP_sim;
+a(:,80)       = SR_sim;
 
 %
-load('scruzl.us_ambient_2.mat')
-WP_obs      = data(913:942,3);  
-max_f       = max(data(913:942,4)); % maximum respiration
-SR_obs      = data(913:942,4)/max_f;
+load('scruzl.us_ambient_final.mat')
+WP_obs      = data(860:889,3);  
+max_f       = max(data(860:889,4)); % maximum respiration
+SR_obs      = data(860:889,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(913:942,5)/max_f;
+SR_sd       = data(860:889,5)/max_f;
 
 % fig = figure;
-subplot(3,4,7);
+subplot(3,4,5);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1446,21 +1421,21 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(43,:) = p;
-a(:,43)       = WP_sim;
-a(:,44)       = SR_sim;
+p_final(41,:) = p;
+a(:,81)       = WP_sim;
+a(:,82)       = SR_sim;
 
 %
-load('scruzl.us_drought_2.mat')
-WP_obs      = data(943:972,3);  
-max_f       = max(data(943:972,4)); % maximum respiration
-SR_obs      = data(943:972,4)/max_f;
+load('scruzl.us_drought_final.mat')
+WP_obs      = data(890:919,3);  
+max_f       = max(data(890:919,4)); % maximum respiration
+SR_obs      = data(890:919,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(943:972,5)/max_f;
+SR_sd       = data(890:919,5)/max_f;
 
-subplot(3,4,8);
+subplot(3,4,6);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
 hold on
 B = plot(log10(WP_obs),SR_obs,"*");
@@ -1480,17 +1455,89 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(44,:) = p;
+p_final(42,:) = p;
+a(:,83)       = WP_sim;
+a(:,84)       = SR_sim;
 
 %
-load('sgsdrt.us_ambient_2.mat')
-WP_obs      = data(973:995,3);  
-max_f       = max(data(973:995,4)); % maximum respiration
-SR_obs      = data(973:995,4)/max_f;
+
+load('Sev.mix_ambient_final.mat')
+WP_obs      = data(920:949,3);  
+max_f       = max(data(920:949,4)); % maximum respiration
+SR_obs      = data(920:949,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(973:995,5)/max_f;
+SR_sd       = data(920:949,5)/max_f;
+
+% fig = figure;
+subplot(3,4,7);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Sev.mix - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(43,:) = p;
+a(:,85)       = WP_sim;
+a(:,86)       = SR_sim;
+
+%
+load('Sev.mix_drought_final.mat')
+WP_obs      = data(950:979,3);  
+max_f       = max(data(950:979,4)); % maximum respiration
+SR_obs      = data(950:979,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(950:979,5)/max_f;
+
+subplot(3,4,8);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Sev.mix - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(44,:) = p;
+a(:,87)       = WP_sim;
+a(:,88)       = SR_sim;
+
+%
+load('sgsdrt.us_ambient_final.mat')
+WP_obs      = data(980:1003,3);  
+max_f       = max(data(980:1003,4)); % maximum respiration
+SR_obs      = data(980:1003,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(980:1003,5)/max_f;
 
 % fig = figure;
 subplot(3,4,9);
@@ -1514,18 +1561,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(45,:) = p;
-a(:,45)       = WP_sim;
-a(:,46)       = SR_sim;
+a(:,89)       = WP_sim;
+a(:,90)       = SR_sim;
 
 %
-load('sgsdrt.us_drought_2.mat')
-WP_obs      = data(996:1019,3);  
-max_f       = max(data(996:1019,4)); % maximum respiration
-SR_obs      = data(996:1019,4)/max_f;
+load('sgsdrt.us_drought_final.mat')
+WP_obs      = data(1004:1027,3);  
+max_f       = max(data(1004:1027,4)); % maximum respiration
+SR_obs      = data(1004:1027,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(996:1019,5)/max_f;
+SR_sd       = data(1004:1027,5)/max_f;
 
 subplot(3,4,10);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1548,16 +1595,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(46,:) = p;
+a(:,91)       = WP_sim;
+a(:,92)       = SR_sim;
 
 %
-load('skotsvar.no_ambient_2.mat')
-WP_obs      = data(1020:1037,3);  
-max_f       = max(data(1020:1037,4)); % maximum respiration
-SR_obs      = data(1020:1037,4)/max_f;
+load('skotsvar.no_ambient_final.mat')
+WP_obs      = data(1028:1045,3);  
+max_f       = max(data(1028:1045,4)); % maximum respiration
+SR_obs      = data(1028:1045,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1020:1037,5)/max_f;
+SR_sd       = data(1028:1045,5)/max_f;
 
 % fig = figure;
 subplot(3,4,11);
@@ -1581,18 +1630,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(47,:) = p;
-a(:,47)       = WP_sim;
-a(:,48)       = SR_sim;
+a(:,93)       = WP_sim;
+a(:,94)       = SR_sim;
 
 %
-load('skotsvar.no_drought_2.mat')
-WP_obs      = data(1038:1055,3);  
-max_f       = max(data(1038:1055,4)); % maximum respiration
-SR_obs      = data(1038:1055,4)/max_f;
+load('skotsvar.no_drought_final.mat')
+WP_obs      = data(1046:1063,3);  
+max_f       = max(data(1046:1063,4)); % maximum respiration
+SR_obs      = data(1046:1063,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1038:1055,5)/max_f;
+SR_sd       = data(1046:1063,5)/max_f;
 
 subplot(3,4,12);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1615,17 +1664,19 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(48,:) = p;
+a(:,95)       = WP_sim;
+a(:,96)       = SR_sim;
 
-% 
+%
 
-load('ukulingadrt.za_ambient_2.mat')
-WP_obs      = data(1056:1073,3);  
-max_f       = max(data(1056:1073,4)); % maximum respiration
-SR_obs      = data(1056:1073,4)/max_f;
+load('ukulingadrt.za_ambient_final.mat')
+WP_obs      = data(1064:1081,3);  
+max_f       = max(data(1064:1081,4)); % maximum respiration
+SR_obs      = data(1064:1081,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1056:1073,5)/max_f;
+SR_sd       = data(1064:1081,5)/max_f;
 
 fig = figure;
 subplot(3,4,1);
@@ -1649,18 +1700,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(49,:) = p;
-a(:,49)       = WP_sim;
-a(:,50)       = SR_sim;
+a(:,97)       = WP_sim;
+a(:,98)       = SR_sim;
 
 %
-load('ukulingadrt.za_drought_2.mat')
-WP_obs      = data(1074:1091,3);  
-max_f       = max(data(1074:1091,4)); % maximum respiration
-SR_obs      = data(1074:1091,4)/max_f;
+load('ukulingadrt.za_drought_final.mat')
+WP_obs      = data(1082:1099,3);  
+max_f       = max(data(1082:1099,4)); % maximum respiration
+SR_obs      = data(1082:1099,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1074:1091,5)/max_f;
+SR_sd       = data(1082:1099,5)/max_f;
 
 subplot(3,4,2);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1683,16 +1734,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(50,:) = p;
+a(:,99)       = WP_sim;
+a(:,100)       = SR_sim;
 
 %
-load('wayqe.re_ambient_2.mat')
-WP_obs      = data(1092:1109,3);  
-max_f       = max(data(1092:1109,4)); % maximum respiration
-SR_obs      = data(1092:1109,4)/max_f;
+load('wayqe.re_ambient_final.mat')
+WP_obs      = data(1100:1117,3);  
+max_f       = max(data(1100:1117,4)); % maximum respiration
+SR_obs      = data(1100:1117,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1092:1109,5)/max_f;
+SR_sd       = data(1100:1117,5)/max_f;
 
 % fig = figure;
 subplot(3,4,3);
@@ -1716,18 +1769,18 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(51,:) = p;
-a(:,51)       = WP_sim;
-a(:,52)       = SR_sim;
+a(:,101)       = WP_sim;
+a(:,102)       = SR_sim;
 
 %
-load('wayqe.re_drought_2.mat')
-WP_obs      = data(1110:1127,3);  
-max_f       = max(data(1110:1127,4)); % maximum respiration
-SR_obs      = data(1110:1127,4)/max_f;
+load('wayqe.re_drought_final.mat')
+WP_obs      = data(1118:1135,3);  
+max_f       = max(data(1118:1135,4)); % maximum respiration
+SR_obs      = data(1118:1135,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1110:1127,5)/max_f;
+SR_sd       = data(1118:1135,5)/max_f;
 
 subplot(3,4,4);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1750,166 +1803,17 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(52,:) = p;
+a(:,103)       = WP_sim;
+a(:,104)       = SR_sim;
 
-%%
-
-p      = p_final;
-save('p_final_manzoni_2.mat','p')
-VG_titles = {'psi_th' 'alpha' 'psi_fc' 'r^2' 'p-value' 'sample size' 'SEE' 'Respiration_breadth'};
-C = [VG_titles; num2cell(p)];
-writecell(C,'parameters_manzoni_2.csv') 
-
-writematrix(a,'matrices_ambient_2.csv') 
-
-%% Calling Data %%
-
-data    = load("china_matlab.txt");
-p_final = zeros(10,8);
-a       = zeros(1e6,20);
-
-%% Plotting %%
-
-load('Urat_ambient_2.mat')
-WP_obs      = data(1:36,3);  
-max_f       = max(data(1:36,4)); % maximum respiration
-SR_obs      = data(1:36,4)/max_f;
+load('Hongyuan_ambient_final.mat')
+WP_obs      = data(1136:1159,3);  
+max_f       = max(data(1136:1159,4)); % maximum respiration
+SR_obs      = data(1136:1159,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(1:36,5)/max_f;
-
-fig = figure;
-subplot(3,4,1);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Urat - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(1,:) = p;
-a(:,1)       = WP_sim;
-a(:,2)       = SR_sim;
-
-load('Urat_drought_2.mat')
-WP_obs      = data(37:72,3);  
-max_f       = max(data(37:72,4)); % maximum respiration
-SR_obs      = data(37:72,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(37:72,5)/max_f;
-
-subplot(3,4,2);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Urat - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(2,:) = p;
-a(:,3)       = WP_sim;
-a(:,4)       = SR_sim;
-
-load('Yanchi_ambient_2.mat')
-WP_obs      = data(73:108,3);  
-max_f       = max(data(73:108,4)); % maximum respiration
-SR_obs      = data(73:108,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(73:108,5)/max_f;
-
-subplot(3,4,3);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Yanchi - Ambient')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(3,:) = p;
-a(:,5)       = WP_sim;
-a(:,6)       = SR_sim;
-
-load('Yanchi_drought_2.mat')
-WP_obs      = data(109:144,3);  
-max_f       = max(data(109:144,4)); % maximum respiration
-SR_obs      = data(109:144,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(109:144,5)/max_f;
-
-subplot(3,4,4);
-A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
-hold on
-B = plot(log10(WP_obs),SR_obs,"*");
-C = xline(log10(p(3)),'-r');
-D = xline(p(1),'-b');
-% legend([A B C D],{'Simulations','Observations','Field capacity', ...
-%     'Microbial stress threshold'})
-title('Yanchi - Drought')
-xlabel('Log10(Water Potential) [bars]')
-ylabel('Normalized soil respiration')
-xlim([log10(1e-6) log10(10^3.5)])
-ylim([0 1])
-p(1) = 10^p(1);
-mdl  = fitlm(SR_obs,SR_sim1);
-p(4) = mdl.Rsquared.Adjusted;
-p(5) = coefTest(mdl);
-p(6) = length(WP_obs);
-p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
-p(8) = log10(p(1))-log10(p(3));
-p_final(4,:) = p;
-a(:,7)       = WP_sim;
-a(:,8)       = SR_sim;
-
-load('Hongyuan_ambient_2.mat')
-WP_obs      = data(145:167,3);  
-max_f       = max(data(145:167,4)); % maximum respiration
-SR_obs      = data(145:167,4)/max_f;
-WP_sim      = (linspace(p(3),1e3,1e6));
-SR_sim      = manzoni_model(WP_sim,p);
-SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(145:167,5)/max_f;
+SR_sd       = data(1136:1159,5)/max_f;
 
 subplot(3,4,5);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1931,18 +1835,18 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(5,:) = p;
-a(:,9)       = WP_sim;
-a(:,10)       = SR_sim;
+p_final(53,:) = p;
+a(:,105)       = WP_sim;
+a(:,106)       = SR_sim;
 
-load('Hongyuan_drought_2.mat')
-WP_obs      = data(168:191,3);  
-max_f       = max(data(168:191,4)); % maximum respiration
-SR_obs      = data(168:191,4)/max_f;
+load('Hongyuan_drought_final.mat')
+WP_obs      = data(1160:1183,3);  
+max_f       = max(data(1160:1183,4)); % maximum respiration
+SR_obs      = data(1160:1183,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(168:191,5)/max_f;
+SR_sd       = data(1160:1183,5)/max_f;
 
 subplot(3,4,6);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1964,18 +1868,18 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(6,:) = p;
-a(:,11)       = WP_sim;
-a(:,12)       = SR_sim;
+p_final(54,:) = p;
+a(:,107)       = WP_sim;
+a(:,108)       = SR_sim;
 
-load('Hulunber_ambient_2.mat')
-WP_obs      = data(192:226,3);  
-max_f       = max(data(192:226,4)); % maximum respiration
-SR_obs      = data(192:226,4)/max_f;
+load('Hulunber_ambient_final.mat')
+WP_obs      = data(1184:1237,3);  
+max_f       = max(data(1184:1237,4)); % maximum respiration
+SR_obs      = data(1184:1237,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(192:226,5)/max_f;
+SR_sd       = data(1184:1237,5)/max_f;
 
 subplot(3,4,7);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -1997,18 +1901,18 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(7,:) = p;
-a(:,13)       = WP_sim;
-a(:,14)       = SR_sim;
+p_final(55,:) = p;
+a(:,109)       = WP_sim;
+a(:,110)       = SR_sim;
 
-load('Hulunber_drought_2.mat')
-WP_obs      = data(227:262,3);  
-max_f       = max(data(227:262,4)); % maximum respiration
-SR_obs      = data(227:262,4)/max_f;
+load('Hulunber_drought_final.mat')
+WP_obs      = data(1238:1291,3);  
+max_f       = max(data(1238:1291,4)); % maximum respiration
+SR_obs      = data(1238:1291,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(227:262,5)/max_f;
+SR_sd       = data(1238:1291,5)/max_f;
 
 subplot(3,4,8);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -2030,18 +1934,18 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(8,:) = p;
-a(:,15)       = WP_sim;
-a(:,16)       = SR_sim;
+p_final(56,:) = p;
+a(:,111)       = WP_sim;
+a(:,112)       = SR_sim;
 
-load('Naqui_ambient_2.mat')
-WP_obs      = data(263:296,3);  
-max_f       = max(data(263:296,4)); % maximum respiration
-SR_obs      = data(263:296,4)/max_f;
+load('Naqui_ambient_final.mat')
+WP_obs      = data(1292:1325,3);  
+max_f       = max(data(1292:1325,4)); % maximum respiration
+SR_obs      = data(1292:1325,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(263:296,5)/max_f;
+SR_sd       = data(1292:1325,5)/max_f;
 
 subplot(3,4,9);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -2063,18 +1967,18 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(9,:) = p;
-a(:,17)       = WP_sim;
-a(:,18)       = SR_sim;
+p_final(57,:) = p;
+a(:,113)       = WP_sim;
+a(:,114)       = SR_sim;
 
-load('Naqui_drought_2.mat')
-WP_obs      = data(297:331,3);  
-max_f       = max(data(297:331,4)); % maximum respiration
-SR_obs      = data(297:331,4)/max_f;
+load('Naqui_drought_final.mat')
+WP_obs      = data(1326:1361,3);  
+max_f       = max(data(1326:1361,4)); % maximum respiration
+SR_obs      = data(1326:1361,4)/max_f;
 WP_sim      = (linspace(p(3),1e3,1e6));
 SR_sim      = manzoni_model(WP_sim,p);
 SR_sim1     = manzoni_model(WP_obs,p);
-SR_sd       = data(297:331,5)/max_f;
+SR_sd       = data(1326:1361,5)/max_f;
 
 subplot(3,4,10);
 A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
@@ -2096,15 +2000,154 @@ p(5) = coefTest(mdl);
 p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
-p_final(10,:) = p;
-a(:,19)       = WP_sim;
-a(:,20)       = SR_sim;
+p_final(58,:) = p;
+a(:,115)       = WP_sim;
+a(:,116)       = SR_sim;
+
+load('Urat_ambient_final.mat')
+WP_obs      = data(1362:1397,3);  
+max_f       = max(data(1362:1397,4)); % maximum respiration
+SR_obs      = data(1362:1397,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(1362:1397,5)/max_f;
+
+%fig = figure;
+subplot(3,4,11);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Urat - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(59,:) = p;
+a(:,117)       = WP_sim;
+a(:,118)       = SR_sim;
+
+load('Urat_drought_final.mat')
+WP_obs      = data(1398:1433,3);  
+max_f       = max(data(1398:1433,4)); % maximum respiration
+SR_obs      = data(1398:1433,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(1398:1433,5)/max_f;
+
+subplot(3,4,12);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Urat - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(60,:) = p;
+a(:,119)       = WP_sim;
+a(:,120)       = SR_sim;
+
+%
+
+load('Yanchi_ambient_final.mat')
+WP_obs      = data(1434:1470,3);  
+max_f       = max(data(1434:1470,4)); % maximum respiration
+SR_obs      = data(1434:1470,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(1434:1470,5)/max_f;
+
+fig = figure;
+subplot(3,4,1);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Yanchi - Ambient')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(61,:) = p;
+a(:,121)       = WP_sim;
+a(:,122)       = SR_sim;
+
+load('Yanchi_drought_final.mat')
+WP_obs      = data(1471:1507,3);  
+max_f       = max(data(1471:1507,4)); % maximum respiration
+SR_obs      = data(1471:1507,4)/max_f;
+WP_sim      = (linspace(p(3),1e3,1e6));
+SR_sim      = manzoni_model(WP_sim,p);
+SR_sim1     = manzoni_model(WP_obs,p);
+SR_sd       = data(1471:1507,5)/max_f;
+
+subplot(3,4,2);
+A = plot(log10(WP_sim),SR_sim,'Color', [17 17 17]/255);
+hold on
+B = plot(log10(WP_obs),SR_obs,"*");
+C = xline(log10(p(3)),'-r');
+D = xline(p(1),'-b');
+% legend([A B C D],{'Simulations','Observations','Field capacity', ...
+%     'Microbial stress threshold'})
+title('Yanchi - Drought')
+xlabel('Log10(Water Potential) [bars]')
+ylabel('Normalized soil respiration')
+xlim([log10(1e-6) log10(10^3.5)])
+ylim([0 1])
+p(1) = 10^p(1);
+mdl  = fitlm(SR_obs,SR_sim1);
+p(4) = mdl.Rsquared.Adjusted;
+p(5) = coefTest(mdl);
+p(6) = length(WP_obs);
+p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
+p(8) = log10(p(1))-log10(p(3));
+p_final(62,:) = p;
+a(:,123)       = WP_sim;
+a(:,124)       = SR_sim;
 
 %%
+
 p      = p_final;
-save('p_final_manzoni_china.mat','p')
+save('p_final_manzoni_2.mat','p')
 VG_titles = {'psi_th' 'alpha' 'psi_fc' 'r^2' 'p-value' 'sample size' 'SEE' 'Respiration_breadth'};
 C = [VG_titles; num2cell(p)];
-writecell(C,'parameters_manzoni_china.csv') 
 
-writematrix(a,'matrices_ambient_china.csv') 
+%%
+writecell(C,'parameters_manzoni_2.csv') 
+
+writematrix(a,'matrices_ambient_2.csv') 

@@ -53,11 +53,14 @@ options = optimoptions(@fmincon,'MaxFunEvals',100000);
 % save('skotsvar.no.mat','p')
 
 %%
+clear all; clc
+%%
+
 log10(max(x))
 min(x)
 
 %%
-p = [2.0 0.5 0.00101]; % 0.0101; 0.00101; 0.000101
+p = [3.01 1 1.1e-6]; % 3.01; 1.1e-6
 %%
 ObjectiveFunction = @calibration_manzoni;
 
@@ -66,79 +69,79 @@ b = [];
 Aeq = [];
 beq = [];
 
-ub = [3.1 0.8 1]; % 1e2
-lb = [-1 1e-2 0.001]; % 0.01; 0.001; 0.00001 
+ub = [3.1 1e2 1]; % 1e2
+lb = [-1 1e-2 1e-6]; % 0.01; 0.001; 0.00001 
 
 p0 = p;
 
 nonlcon = [];
-options = optimoptions(@fmincon,'MaxFunEvals',100000);
+options = optimoptions(@fmincon,'MaxFunEvals',100000); % 100000
 
 [p,fval,exitFlag,output] = fmincon(ObjectiveFunction,p0,A,b,Aeq,beq,lb,ub,nonlcon,options);
 
 %%
-%% save('Ayora_ambient_2.mat','p')
-%% save('Ayora_drought_2.mat','p')
-%% save('GIG_ambient_2.mat','p')
-%% save('GIG_drought_2.mat','p')
-%% save('P12_ambient_2.mat','p')
-%% save('P12_drought_2.mat','p')
-%% save('P13_ambient_2.mat','p')
-%% save('P13_drought_2.mat','p')
-%% save('PNE_unburned_ambient_2.mat','p')
-%% save('PNE_unburned_drought_2.mat','p')
-%% save('Purdue.us_ambient_2.mat','p')
-%% save('Purdue.us_drought_2.mat','p')
-%% save('Sev.mix_ambient_2.mat','p')
-%% save('Sev.mix_drought_2.mat','p')
-%% save('baddrt.de_ambient_2.mat','p')
-%% save('baddrt.de_drought_2.mat','p')
-%% save('brhill.au_ambient_2.mat','p')
-%% save('brhill.au_drought_2.mat','p')
-%% save('brookdale.ca_ambient_2.mat','p')
-%% save('brookdale.ca_drought_2.mat','p')
-%% save('cedarsav.us_ambient_2.mat','p')
-%% save('cedarsav.us_drought_2.mat','p')
-%% save('cobar.au_ambient_2.mat','p')
-%% save('cobar.au_drought_2.mat','p')
-%% save('cowidrt.ca_ambient_2.mat','p')
-%% save('cowidrt.ca_drought_2.mat','p')
-%% save('dona.ana_ambient_2.mat','p')
-%% save('dona.ana_drought_2.mat','p')
-%% save('hoide.de_ambient_2.mat','p')
-%% save('hoide.de_drought_2.mat','p')
-%% save('horacg.cr_ambient_2.mat','p')
-%% save('horacg.cr_drought_2.mat','p')
-%% save('hyide.de_ambient_2.mat','p')
-%% save('hyide.de_drought_2.mat','p')
-%% save('lygra.no_ambient_2.mat','p')
-%% save('lygra.no_drought_2.mat','p')
-%% save('nyngan.au_ambient_2.mat','p')
-%% save('nyngan.au_drought_2.mat','p')
-%% save('passogavia.it_ambient_2.mat','p')
-%% save('passogavia.it_drought_2.mat','p')
-%% save('riomayo.ar_ambient_2.mat','p')
-%% save('riomayo.ar_drought_2.mat','p')
-%% save('scruzl.us_ambient_2.mat','p')
-%% save('scruzl.us_drought_2.mat','p')
-%% save('sgsdrt.us_ambient_2.mat','p')
-%% save('sgsdrt.us_drought_2.mat','p')
-%% save('skotsvar.no_ambient_2.mat','p')
-%% save('skotsvar.no_drought_2.mat','p')
-%% save('ukulingadrt.za_ambient_2.mat','p')
-%% save('ukulingadrt.za_drought_2.mat','p')
-%% save('wayqe.re_ambient_2.mat','p')
-%% save('wayqe.re_drought_2.mat','p')
-%% save('Urat_ambient_2.mat','p')
-%% save('Urat_drought_2.mat','p')
-%% save('Yanchi_ambient_2.mat','p')
-%% save('Yanchi_drought_2.mat','p')
-%% save('Hongyuan_ambient_2.mat','p')
-%% save('Hongyuan_drought_2.mat','p')
-%% save('Hulunber_ambient_2.mat','p')
-%% save('Hulunber_drought_2.mat','p')
-%% save('Naqui_ambient_2.mat','p')
-%% save('Naqui_drought_2.mat','p')
+% save('Ayora_ambient_final.mat','p')
+% save('Ayora_drought_final.mat','p')
+% save('baddrt.de_ambient_final.mat','p')
+% save('baddrt.de_drought_final.mat','p')
+% save('brhill.au_ambient_final.mat','p')
+% save('brhill.au_drought_final.mat','p')
+% save('brookdale.ca_ambient_final.mat','p')
+% save('brookdale.ca_drought_final.mat','p')
+% save('cedarsav.us_ambient_final.mat','p')
+% save('cedarsav.us_drought_final.mat','p')
+% save('cobar.au_ambient_final.mat','p')
+% save('cobar.au_drought_final.mat','p')
+% save('cowidrt.ca_ambient_final.mat','p')
+% save('cowidrt.ca_drought_final.mat','p')
+% save('dona.ana_ambient_final.mat','p')
+% save('dona.ana_drought_final.mat','p')
+% save('GIG_ambient_final.mat','p')
+% save('GIG_drought_final.mat','p')
+% save('hoide.de_ambient_final.mat','p')
+% save('hoide.de_drought_final.mat','p')
+% save('horacg.cr_ambient_final.mat','p')
+% save('horacg.cr_drought_final.mat','p')
+% save('hyide.de_ambient_final.mat','p')
+% save('hyide.de_drought_final.mat','p')
+% save('lygra.no_ambient_final.mat','p')
+% save('lygra.no_drought_final.mat','p')
+% save('nyngan.au_ambient_final.mat','p')
+% save('nyngan.au_drought_final.mat','p')
+% save('P12_ambient_final.mat','p')
+% save('P12_drought_final.mat','p')
+% save('P13_ambient_final.mat','p')
+% save('P13_drought_final.mat','p')
+% save('passogavia.it_ambient_final.mat','p')
+% save('passogavia.it_drought_final.mat','p')
+% save('PNE_unburned_ambient_final.mat','p')
+% save('PNE_unburned_drought_final.mat','p')
+% save('Purdue.us_ambient_final.mat','p')
+% save('Purdue.us_drought_final.mat','p')
+% save('riomayo.ar_ambient_final.mat','p')
+% save('riomayo.ar_drought_final.mat','p')
+% save('scruzl.us_ambient_final.mat','p')
+% save('scruzl.us_drought_final.mat','p')
+% save('Sev.mix_ambient_final.mat','p')
+% save('Sev.mix_drought_final.mat','p')
+% save('sgsdrt.us_ambient_final.mat','p')
+% save('sgsdrt.us_drought_final.mat','p')
+% save('skotsvar.no_ambient_final.mat','p')
+% save('skotsvar.no_drought_final.mat','p')
+% save('ukulingadrt.za_ambient_final.mat','p')
+% save('ukulingadrt.za_drought_final.mat','p')
+% save('wayqe.re_ambient_final.mat','p')
+% save('wayqe.re_drought_final.mat','p')
+% save('Hongyuan_ambient_final.mat','p')
+% save('Hongyuan_drought_final.mat','p')
+% save('Hulunber_ambient_final.mat','p')
+% save('Hulunber_drought_final.mat','p')
+% save('Naqui_ambient_final.mat','p')
+% save('Naqui_drought_final.mat','p')
+% save('Urat_ambient_final.mat','p')
+% save('Urat_drought_final.mat','p')
+% save('Yanchi_ambient_final.mat','p')
+% save('Yanchi_drought_final.mat','p')
 
 %%
 log10(max(x))
