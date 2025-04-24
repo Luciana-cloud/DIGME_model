@@ -5,6 +5,7 @@
 data    = load("manzoni_new_matlab.txt");
 p_final = zeros(52,8);
 a       = zeros(1e6,52);
+b       = zeros(1e6,52);
 
 %% Plotting
 
@@ -73,8 +74,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(2,:) = p;
-a(:,3)       = WP_sim;
-a(:,4)       = SR_sim;
+b(:,1)       = WP_sim;
+b(:,2)       = SR_sim;
 
 %
 load('baddrt.de_ambient_final.mat')
@@ -108,8 +109,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(3,:) = p;
-a(:,5)       = WP_sim;
-a(:,6)       = SR_sim;
+a(:,3)       = WP_sim;
+a(:,4)       = SR_sim;
 
 load('baddrt.de_drought_final.mat')
 WP_obs      = data(67:95,3);  
@@ -141,8 +142,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(4,:) = p;
-a(:,7)       = WP_sim;
-a(:,8)       = SR_sim;
+b(:,3)       = WP_sim;
+b(:,4)       = SR_sim;
 
 %
 load('brhill.au_ambient_final.mat')
@@ -176,8 +177,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(5,:) = p;
-a(:,9)       = WP_sim;
-a(:,10)       = SR_sim;
+a(:,5)       = WP_sim;
+a(:,6)       = SR_sim;
 
 %
 load('brhill.au_drought_final.mat')
@@ -210,8 +211,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(6,:) = p;
-a(:,11)       = WP_sim;
-a(:,12)       = SR_sim;
+b(:,5)       = WP_sim;
+b(:,6)       = SR_sim;
 
 %
 load('brookdale.ca_ambient_final.mat')
@@ -245,8 +246,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(7,:) = p;
-a(:,13)       = WP_sim;
-a(:,14)       = SR_sim;
+a(:,7)       = WP_sim;
+a(:,8)       = SR_sim;
 
 %
 load('brookdale.ca_drought_final.mat')
@@ -279,8 +280,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(8,:) = p;
-a(:,15)       = WP_sim;
-a(:,16)       = SR_sim;
+b(:,7)       = WP_sim;
+b(:,8)       = SR_sim;
 
 %
 load('cedarsav.us_ambient_final.mat')
@@ -314,8 +315,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(9,:) = p;
-a(:,17)       = WP_sim;
-a(:,18)       = SR_sim;
+a(:,9)       = WP_sim;
+a(:,10)       = SR_sim;
 
 %
 load('cedarsav.us_drought_final.mat')
@@ -348,8 +349,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(10,:) = p;
-a(:,19)       = WP_sim;
-a(:,20)       = SR_sim;
+b(:,9)       = WP_sim;
+b(:,10)       = SR_sim;
 
 %
 load('cobar.au_ambient_final.mat')
@@ -383,8 +384,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(11,:) = p;
-a(:,21)       = WP_sim;
-a(:,22)       = SR_sim;
+a(:,11)       = WP_sim;
+a(:,12)       = SR_sim;
 
 %
 load('cobar.au_drought_final.mat')
@@ -417,8 +418,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(12,:) = p;
-a(:,23)       = WP_sim;
-a(:,24)       = SR_sim;
+b(:,11)       = WP_sim;
+b(:,12)       = SR_sim;
 
 %
 
@@ -453,8 +454,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(13,:) = p;
-a(:,25)       = WP_sim;
-a(:,26)       = SR_sim;
+a(:,13)       = WP_sim;
+a(:,14)       = SR_sim;
 
 %
 load('cowidrt.ca_drought_final.mat')
@@ -487,8 +488,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(14,:) = p;
-a(:,27)       = WP_sim;
-a(:,28)       = SR_sim;
+b(:,13)       = WP_sim;
+b(:,14)       = SR_sim;
 
 %
 load('dona.ana_ambient_final.mat')
@@ -522,8 +523,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(15,:) = p;
-a(:,29)       = WP_sim;
-a(:,30)       = SR_sim;
+a(:,15)       = WP_sim;
+a(:,16)       = SR_sim;
 
 %
 load('dona.ana_drought_final.mat')
@@ -556,8 +557,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(16,:) = p;
-a(:,31)       = WP_sim;
-a(:,32)       = SR_sim;
+b(:,15)       = WP_sim;
+b(:,16)       = SR_sim;
 
 %
 load('GIG_ambient_final.mat')
@@ -591,8 +592,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(17,:) = p;
-a(:,33)       = WP_sim;
-a(:,34)       = SR_sim;
+a(:,17)       = WP_sim;
+a(:,18)       = SR_sim;
 
 
 %
@@ -626,8 +627,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(18,:) = p;
-a(:,35)       = WP_sim;
-a(:,36)       = SR_sim;
+b(:,17)       = WP_sim;
+b(:,18)       = SR_sim;
 
 %
 load('hoide.de_ambient_final.mat')
@@ -661,8 +662,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(19,:) = p;
-a(:,37)       = WP_sim;
-a(:,38)       = SR_sim;
+a(:,19)       = WP_sim;
+a(:,20)       = SR_sim;
 
 %
 load('hoide.de_drought_final.mat')
@@ -695,8 +696,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(20,:) = p;
-a(:,39)       = WP_sim;
-a(:,40)       = SR_sim;
+b(:,19)       = WP_sim;
+b(:,20)       = SR_sim;
 
 %
 load('horacg.cr_ambient_final.mat')
@@ -730,8 +731,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(21,:) = p;
-a(:,41)       = WP_sim;
-a(:,42)       = SR_sim;
+a(:,21)       = WP_sim;
+a(:,22)       = SR_sim;
 
 %
 load('horacg.cr_drought_final.mat')
@@ -764,8 +765,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(22,:) = p;
-a(:,43)       = WP_sim;
-a(:,44)       = SR_sim;
+b(:,21)       = WP_sim;
+b(:,22)       = SR_sim;
 
 %
 load('hyide.de_ambient_final.mat')
@@ -799,8 +800,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(23,:) = p;
-a(:,45)       = WP_sim;
-a(:,46)       = SR_sim;
+a(:,23)       = WP_sim;
+a(:,24)       = SR_sim;
 
 %
 load('hyide.de_drought_final.mat')
@@ -833,8 +834,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(24,:) = p;
-a(:,47)       = WP_sim;
-a(:,48)       = SR_sim;
+b(:,23)       = WP_sim;
+b(:,24)       = SR_sim;
 
 %
 
@@ -869,8 +870,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(25,:) = p;
-a(:,49)       = WP_sim;
-a(:,50)       = SR_sim;
+a(:,25)       = WP_sim;
+a(:,26)       = SR_sim;
 
 %
 load('lygra.no_drought_final.mat')
@@ -903,8 +904,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(26,:) = p;
-a(:,51)       = WP_sim;
-a(:,52)       = SR_sim;
+b(:,25)       = WP_sim;
+b(:,26)       = SR_sim;
 
 %
 
@@ -939,8 +940,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(27,:) = p;
-a(:,53)       = WP_sim;
-a(:,54)       = SR_sim;
+a(:,27)       = WP_sim;
+a(:,28)       = SR_sim;
 
 %
 load('nyngan.au_drought_final.mat')
@@ -973,8 +974,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(28,:) = p;
-a(:,55)       = WP_sim;
-a(:,56)       = SR_sim;
+b(:,27)       = WP_sim;
+b(:,28)       = SR_sim;
 
 %
 load('P12_ambient_final.mat')
@@ -1008,8 +1009,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(29,:) = p;
-a(:,57)       = WP_sim;
-a(:,58)       = SR_sim;
+a(:,29)       = WP_sim;
+a(:,30)       = SR_sim;
 
 %
 load('P12_drought_final.mat')
@@ -1042,8 +1043,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(30,:) = p;
-a(:,59)       = WP_sim;
-a(:,60)       = SR_sim;
+b(:,29)       = WP_sim;
+b(:,30)       = SR_sim;
 
 %
 load('P13_ambient_final.mat')
@@ -1077,8 +1078,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(31,:) = p;
-a(:,61)       = WP_sim;
-a(:,62)       = SR_sim;
+a(:,31)       = WP_sim;
+a(:,32)       = SR_sim;
 
 %
 load('P13_drought_final.mat')
@@ -1111,8 +1112,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(32,:) = p;
-a(:,63)       = WP_sim;
-a(:,64)       = SR_sim;
+b(:,31)       = WP_sim;
+b(:,32)       = SR_sim;
 
 %
 load('passogavia.it_ambient_final.mat')
@@ -1146,8 +1147,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(33,:) = p;
-a(:,65)       = WP_sim;
-a(:,66)       = SR_sim;
+a(:,33)       = WP_sim;
+a(:,34)       = SR_sim;
 
 %
 load('passogavia.it_drought_final.mat')
@@ -1180,8 +1181,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(34,:) = p;
-a(:,67)       = WP_sim;
-a(:,68)       = SR_sim;
+b(:,33)       = WP_sim;
+b(:,34)       = SR_sim;
 
 %
 load('PNE_unburned_ambient_final.mat')
@@ -1215,8 +1216,9 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(35,:) = p;
-a(:,69)       = WP_sim;
-a(:,70)       = SR_sim;
+a(:,35)       = WP_sim;
+a(:,36)       = SR_sim; 
+
 %
 load('PNE_unburned_drought_final.mat')
 WP_obs      = data(762:779,3);  
@@ -1248,8 +1250,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(36,:) = p;
-a(:,71)       = WP_sim;
-a(:,72)       = SR_sim;
+b(:,35)       = WP_sim;
+b(:,36)       = SR_sim;
 
 %
 
@@ -1284,8 +1286,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(37,:) = p;
-a(:,73)       = WP_sim;
-a(:,74)       = SR_sim;
+a(:,37)       = WP_sim;
+a(:,38)       = SR_sim;
 
 %
 load('Purdue.us_drought_final.mat')
@@ -1318,8 +1320,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(38,:) = p;
-a(:,75)       = WP_sim;
-a(:,76)       = SR_sim;
+b(:,37)       = WP_sim;
+b(:,38)       = SR_sim;
 
 %
 load('riomayo.ar_ambient_final.mat')
@@ -1353,8 +1355,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(39,:) = p;
-a(:,77)       = WP_sim;
-a(:,78)       = SR_sim;
+a(:,39)       = WP_sim;
+a(:,40)       = SR_sim;
 
 %
 load('riomayo.ar_drought_final.mat')
@@ -1387,8 +1389,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(40,:) = p;
-a(:,79)       = WP_sim;
-a(:,80)       = SR_sim;
+b(:,39)       = WP_sim;
+b(:,40)       = SR_sim;
 
 %
 load('scruzl.us_ambient_final.mat')
@@ -1422,8 +1424,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(41,:) = p;
-a(:,81)       = WP_sim;
-a(:,82)       = SR_sim;
+a(:,41)       = WP_sim;
+a(:,42)       = SR_sim;
 
 %
 load('scruzl.us_drought_final.mat')
@@ -1456,8 +1458,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(42,:) = p;
-a(:,83)       = WP_sim;
-a(:,84)       = SR_sim;
+b(:,41)       = WP_sim;
+b(:,42)       = SR_sim;
 
 %
 
@@ -1492,8 +1494,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(43,:) = p;
-a(:,85)       = WP_sim;
-a(:,86)       = SR_sim;
+a(:,43)       = WP_sim;
+a(:,44)       = SR_sim;
 
 %
 load('Sev.mix_drought_final.mat')
@@ -1526,8 +1528,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(44,:) = p;
-a(:,87)       = WP_sim;
-a(:,88)       = SR_sim;
+b(:,43)       = WP_sim;
+b(:,44)       = SR_sim;
 
 %
 load('sgsdrt.us_ambient_final.mat')
@@ -1561,8 +1563,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(45,:) = p;
-a(:,89)       = WP_sim;
-a(:,90)       = SR_sim;
+a(:,45)       = WP_sim;
+a(:,46)       = SR_sim;
 
 %
 load('sgsdrt.us_drought_final.mat')
@@ -1595,8 +1597,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(46,:) = p;
-a(:,91)       = WP_sim;
-a(:,92)       = SR_sim;
+b(:,45)       = WP_sim;
+b(:,46)       = SR_sim;
 
 %
 load('skotsvar.no_ambient_final.mat')
@@ -1630,8 +1632,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(47,:) = p;
-a(:,93)       = WP_sim;
-a(:,94)       = SR_sim;
+a(:,47)       = WP_sim;
+a(:,48)       = SR_sim;
 
 %
 load('skotsvar.no_drought_final.mat')
@@ -1664,8 +1666,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(48,:) = p;
-a(:,95)       = WP_sim;
-a(:,96)       = SR_sim;
+b(:,47)       = WP_sim;
+b(:,48)       = SR_sim;
 
 %
 
@@ -1700,8 +1702,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(49,:) = p;
-a(:,97)       = WP_sim;
-a(:,98)       = SR_sim;
+a(:,49)       = WP_sim;
+a(:,50)       = SR_sim;
 
 %
 load('ukulingadrt.za_drought_final.mat')
@@ -1734,8 +1736,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(50,:) = p;
-a(:,99)       = WP_sim;
-a(:,100)       = SR_sim;
+b(:,49)       = WP_sim;
+b(:,50)       = SR_sim;
 
 %
 load('wayqe.re_ambient_final.mat')
@@ -1769,8 +1771,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(51,:) = p;
-a(:,101)       = WP_sim;
-a(:,102)       = SR_sim;
+a(:,51)       = WP_sim;
+a(:,52)       = SR_sim;
 
 %
 load('wayqe.re_drought_final.mat')
@@ -1803,8 +1805,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(52,:) = p;
-a(:,103)       = WP_sim;
-a(:,104)       = SR_sim;
+b(:,51)       = WP_sim;
+b(:,52)       = SR_sim;
 
 load('Hongyuan_ambient_final.mat')
 WP_obs      = data(1136:1159,3);  
@@ -1836,8 +1838,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(53,:) = p;
-a(:,105)       = WP_sim;
-a(:,106)       = SR_sim;
+a(:,53)       = WP_sim;
+a(:,54)       = SR_sim;
 
 load('Hongyuan_drought_final.mat')
 WP_obs      = data(1160:1183,3);  
@@ -1869,8 +1871,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(54,:) = p;
-a(:,107)       = WP_sim;
-a(:,108)       = SR_sim;
+b(:,53)       = WP_sim;
+b(:,54)       = SR_sim;
 
 load('Hulunber_ambient_final.mat')
 WP_obs      = data(1184:1237,3);  
@@ -1902,8 +1904,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(55,:) = p;
-a(:,109)       = WP_sim;
-a(:,110)       = SR_sim;
+a(:,55)       = WP_sim;
+a(:,56)       = SR_sim;
 
 load('Hulunber_drought_final.mat')
 WP_obs      = data(1238:1291,3);  
@@ -1935,8 +1937,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(56,:) = p;
-a(:,111)       = WP_sim;
-a(:,112)       = SR_sim;
+b(:,55)       = WP_sim;
+b(:,56)       = SR_sim;
 
 load('Naqui_ambient_final.mat')
 WP_obs      = data(1292:1325,3);  
@@ -1968,8 +1970,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(57,:) = p;
-a(:,113)       = WP_sim;
-a(:,114)       = SR_sim;
+a(:,57)       = WP_sim;
+a(:,58)       = SR_sim;
 
 load('Naqui_drought_final.mat')
 WP_obs      = data(1326:1361,3);  
@@ -2001,8 +2003,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(58,:) = p;
-a(:,115)       = WP_sim;
-a(:,116)       = SR_sim;
+b(:,57)       = WP_sim;
+b(:,58)       = SR_sim;
 
 load('Urat_ambient_final.mat')
 WP_obs      = data(1362:1397,3);  
@@ -2035,8 +2037,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(59,:) = p;
-a(:,117)       = WP_sim;
-a(:,118)       = SR_sim;
+a(:,59)       = WP_sim;
+a(:,60)       = SR_sim;
 
 load('Urat_drought_final.mat')
 WP_obs      = data(1398:1433,3);  
@@ -2068,8 +2070,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(60,:) = p;
-a(:,119)       = WP_sim;
-a(:,120)       = SR_sim;
+b(:,59)       = WP_sim;
+b(:,60)       = SR_sim;
 
 %
 
@@ -2104,8 +2106,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(61,:) = p;
-a(:,121)       = WP_sim;
-a(:,122)       = SR_sim;
+a(:,61)       = WP_sim;
+a(:,62)       = SR_sim;
 
 load('Yanchi_drought_final.mat')
 WP_obs      = data(1471:1507,3);  
@@ -2137,8 +2139,8 @@ p(6) = length(WP_obs);
 p(7) = sum(((log(SR_obs) - log(SR_sim1)).^2)./(log(SR_sd)).^2);
 p(8) = log10(p(1))-log10(p(3));
 p_final(62,:) = p;
-a(:,123)       = WP_sim;
-a(:,124)       = SR_sim;
+b(:,61)       = WP_sim;
+b(:,62)       = SR_sim;
 
 %%
 
@@ -2148,6 +2150,20 @@ VG_titles = {'psi_th' 'alpha' 'psi_fc' 'r^2' 'p-value' 'sample size' 'SEE' 'Resp
 C = [VG_titles; num2cell(p)];
 
 %%
+
+F = 'C:\luciana_datos\UCI\Project_13 (DIGME)\DIGME_model\manzoni_2012\final_parameters';
+S = dir(fullfile(F,'*.mat'));
+C = {S.name}; % much simpler and more efficient than your loop
+
+%%
+
+VG_titles = {C};
+a = [VG_titles; num2cell(p)];
+b = [VG_titles; num2cell(p)];
+
+%%
 writecell(C,'parameters_manzoni_2.csv') 
 
-writematrix(a,'matrices_ambient_2.csv') 
+%%
+writematrix(a,'matrices_ambient.csv')
+writematrix(b,'matrices_drought.csv')
