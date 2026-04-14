@@ -3,9 +3,9 @@ function [SSE] = calibration_vg(p)
 % Calling Data
 
 Data  = load("WP_matlab.txt");
-Data1 = load("WP_matlab_2.txt");
-
-% x    = Data(1:6,4); % Ayora Water pontential [Bar]
+% Data1 = load("WP_matlab_2.txt");
+% 
+x    = Data(1:6,4); % Ayora Water pontential [Bar]
 % x    = Data(7:12,4); % GIG Water pontential [Bar]
 % x    = Data(13:18,4); % P12 Water pontential [Bar]
 % x    = Data(19:24,4); % P13 Water pontential [Bar]
@@ -34,8 +34,8 @@ Data1 = load("WP_matlab_2.txt");
 
 % Constants
 
-% q(1)   = Data(1,5); % Ayora Saturated soil moisture content [-]*
-% q(2)   = Data(6,2); % Ayora Residual soil water content [-]
+q(1)   = Data(1,5); % Ayora Saturated soil moisture content [-]*
+q(2)   = Data(6,2); % Ayora Residual soil water content [-]
 % q(1)   = Data(7,5); % GIG Saturated soil moisture content [-]*
 % q(2)   = Data(12,2); % GIG Residual soil water content [-]
 % q(1)   = Data(13,5); % P12 Saturated soil moisture content [-]*
@@ -95,8 +95,8 @@ WC_sim      = van_genuchten(x,p,q);
 
 % Model Calibration
 
-% WC_obs      = Data(1:6,2); % Ayora Water pontential (mean) [-]
-% WC_sd       = Data(1:6,3); % Ayora Water pontential (sd) [-]
+WC_obs      = Data(1:6,2); % Ayora Water pontential (mean) [-]
+WC_sd       = Data(1:6,3); % Ayora Water pontential (sd) [-]
 % WC_obs      = Data(7:12,2); % GIG Water pontential (mean) [-]
 % WC_sd       = Data(7:12,3); % GIG Water pontential (sd) [-]
 % WC_obs      = Data(13:18,2); % P12 Water pontential (mean) [-]

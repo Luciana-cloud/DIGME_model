@@ -1,4 +1,4 @@
-function [theta] = van_genuchten(x,p)
+function [theta] = van_genuchten(x,p,q)
 
 % Variables 
 
@@ -20,7 +20,7 @@ theta_r = q(2); % Residual soil water content [%]
 
 m = 1 - 1/n; % Shape parameter
 
-% Gravimetric water content [%]
+% Volumetric water content [%]
 
 theta = theta_r + (theta_s - theta_r)./((1 + (alpha.*abs(psi)).^n)).^m;
 
